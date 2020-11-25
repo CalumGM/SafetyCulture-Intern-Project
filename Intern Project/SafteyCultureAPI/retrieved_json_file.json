@@ -1,0 +1,254 @@
+{
+    "template_id": "template_89396bf822de4293bd6528b26f8509c6",
+    "audit_id": "audit_f0bd28dc8f3b42ad828c23d19c0df381",
+    "archived": false,
+    "created_at": "2020-11-24T01:47:19.189Z",
+    "modified_at": "2020-11-24T01:48:21.303Z",
+    "audit_data": {
+        "score": 1,
+        "total_score": 1,
+        "score_percentage": 100,
+        "name": "24 Nov 2020",
+        "duration": 0,
+        "authorship": {
+            "device_id": "user_f4ed19c7b67240febe7aebcd57fe5e44",
+            "owner": "Christopher Ordorica",
+            "owner_id": "user_f4ed19c7b67240febe7aebcd57fe5e44",
+            "author": "Christopher Ordorica",
+            "author_id": "user_f4ed19c7b67240febe7aebcd57fe5e44"
+        },
+        "date_completed": "2020-11-24T01:48:20.000Z",
+        "date_modified": "2020-11-24T01:48:21.000Z",
+        "date_started": "2020-11-24T01:47:19.189Z"
+    },
+    "template_data": {
+        "authorship": {
+            "device_id": "user_f4ed19c7b67240febe7aebcd57fe5e44",
+            "owner": "Christopher Ordorica",
+            "owner_id": "user_f4ed19c7b67240febe7aebcd57fe5e44",
+            "author": "Christopher Ordorica",
+            "author_id": "user_f4ed19c7b67240febe7aebcd57fe5e44"
+        },
+        "metadata": {
+            "description": "",
+            "name": "chris-template"
+        },
+        "response_sets": {
+            "5b69aee5-0532-46a4-b2f5-d020d4d5381d": {
+                "id": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "type": "question",
+                "responses": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca20",
+                        "label": "Good",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca21",
+                        "label": "Fair",
+                        "colour": "255,176,0",
+                        "score": 1,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca22",
+                        "label": "Poor",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca23",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ]
+            },
+            "7601fb75-80ae-4409-b31a-9acd58d45445": {
+                "id": "7601fb75-80ae-4409-b31a-9acd58d45445",
+                "type": "question",
+                "responses": [
+                    {
+                        "id": "af89ffa0-5db2-4a49-93e5-7dd392ab8f10",
+                        "label": "Safe",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "af89ffa1-5db2-4a49-93e5-7dd392ab8f10",
+                        "label": "At Risk",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "af89ffa2-5db2-4a49-93e5-7dd392ab8f10",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ]
+            },
+            "b52a8b4c-048b-4f7d-99b9-c6b9680be5ed": {
+                "id": "b52a8b4c-048b-4f7d-99b9-c6b9680be5ed",
+                "type": "question",
+                "responses": [
+                    {
+                        "id": "2a2b8507-c53d-4d0e-83ec-164cb179b6a0",
+                        "label": "Pass",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "2a2b8507-c53d-4d0e-83ec-164cb179b6a1",
+                        "label": "Fail",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "2a2b8507-c53d-4d0e-83ec-164cb179b6a2",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ]
+            },
+            "c6c011ed-4ade-460d-a04b-da730834b667": {
+                "id": "c6c011ed-4ade-460d-a04b-da730834b667",
+                "type": "question",
+                "responses": [
+                    {
+                        "id": "060ace00-1f61-468e-9c42-918fa93badcf",
+                        "label": "Yes",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "060ace01-1f61-468e-9c42-918fa93badcf",
+                        "label": "No",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "060ace02-1f61-468e-9c42-918fa93badcf",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ]
+            },
+            "d743f356-a147-472c-a790-0c46a187de92": {
+                "id": "d743f356-a147-472c-a790-0c46a187de92",
+                "type": "question",
+                "responses": [
+                    {
+                        "id": "6bb1beb4-494e-4a17-bff7-bed8a6fcd3d0",
+                        "label": "Compliant",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "6bb1beb4-494e-4a17-bff7-bed8a6fcd3d1",
+                        "label": "Non-Compliant",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "6bb1beb4-494e-4a17-bff7-bed8a6fcd3d2",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ]
+            }
+        }
+    },
+    "header_items": [
+        {
+            "item_id": "f3245d39-ea77-11e1-aff1-0800200c9a66",
+            "label": "Title Page",
+            "type": "section",
+            "children": [
+                "f3245d42-ea77-11e1-aff1-0800200c9a66"
+            ]
+        },
+        {
+            "parent_id": "f3245d39-ea77-11e1-aff1-0800200c9a66",
+            "item_id": "f3245d42-ea77-11e1-aff1-0800200c9a66",
+            "label": "Conducted on",
+            "type": "datetime",
+            "options": {
+                "enable_date": true,
+                "enable_time": true
+            },
+            "responses": {
+                "datetime": "2020-11-24T01:47:00.000Z"
+            }
+        }
+    ],
+    "items": [
+        {
+            "item_id": "57ded8ec-ae83-4c67-b267-a291efb1f5c3",
+            "label": "Inspection",
+            "type": "section",
+            "scoring": {
+                "combined_score": 1,
+                "combined_max_score": 1,
+                "combined_score_percentage": 100
+            },
+            "children": [
+                "b220d33c-a2cb-47f2-9b0c-e3423e737257"
+            ]
+        },
+        {
+            "parent_id": "57ded8ec-ae83-4c67-b267-a291efb1f5c3",
+            "item_id": "b220d33c-a2cb-47f2-9b0c-e3423e737257",
+            "label": "Are taco's sandwitches?",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "b52a8b4c-048b-4f7d-99b9-c6b9680be5ed",
+                "failed_responses": [
+                    "2a2b8507-c53d-4d0e-83ec-164cb179b6a1"
+                ],
+                "is_mandatory": true
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "2a2b8507-c53d-4d0e-83ec-164cb179b6a0",
+                        "label": "Pass",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        }
+    ]
+}

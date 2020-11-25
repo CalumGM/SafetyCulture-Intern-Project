@@ -1,0 +1,1322 @@
+{
+    "template_id": "template_f0dfd0f0c20c4b30800d12fa8ab3764b",
+    "audit_id": "audit_bd4ec0cc44eb4d818ded0492f8065f12",
+    "archived": false,
+    "created_at": "2020-11-24T04:29:53.179Z",
+    "modified_at": "2020-11-24T04:31:10.544Z",
+    "audit_data": {
+        "score": 24,
+        "total_score": 24,
+        "score_percentage": 100,
+        "name": "24 Nov 2020 / Tim Goodman",
+        "duration": 0,
+        "authorship": {
+            "device_id": "user_37fcd48c96c1444b8f072ea287acf21d",
+            "owner": "Timothy Walsh",
+            "owner_id": "user_37fcd48c96c1444b8f072ea287acf21d",
+            "author": "Timothy Walsh",
+            "author_id": "user_37fcd48c96c1444b8f072ea287acf21d"
+        },
+        "date_completed": "2020-11-24T04:31:09.000Z",
+        "date_modified": "2020-11-24T04:31:10.000Z",
+        "date_started": "2020-11-24T04:29:53.179Z",
+        "site": {
+            "name": "Interns2020-Real-Estate",
+            "area": {
+                "name": "Townsville"
+            },
+            "region": {
+                "name": "QLD"
+            }
+        }
+    },
+    "template_data": {
+        "authorship": {
+            "device_id": "user_37fcd48c96c1444b8f072ea287acf21d",
+            "owner": "Timothy Walsh",
+            "owner_id": "user_37fcd48c96c1444b8f072ea287acf21d",
+            "author": "Timothy Walsh",
+            "author_id": "user_37fcd48c96c1444b8f072ea287acf21d"
+        },
+        "metadata": {
+            "description": "Property Inspection",
+            "name": "Interns2020-RealEstate-Property-Inspection"
+        },
+        "response_sets": {
+            "4d2cbf27-b5fb-4b86-88d1-e58399f568ff": {
+                "id": "4d2cbf27-b5fb-4b86-88d1-e58399f568ff",
+                "type": "question",
+                "responses": [
+                    {
+                        "id": "338e092f-7b8c-4cca-a62a-3461c30d9d39",
+                        "label": "Yes",
+                        "colour": "129,181,50",
+                        "score": 0,
+                        "enable_score": false
+                    },
+                    {
+                        "id": "87a49131-b643-4c00-8d47-bbedc3ade59d",
+                        "label": "No",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "enable_score": false
+                    }
+                ]
+            },
+            "5b69aee5-0532-46a4-b2f5-d020d4d5381d": {
+                "id": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "type": "question",
+                "responses": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca20",
+                        "label": "Good",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca21",
+                        "label": "Fair",
+                        "colour": "255,176,0",
+                        "score": 1,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca22",
+                        "label": "Poor",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca23",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ]
+            },
+            "7601fb75-80ae-4409-b31a-9acd58d45445": {
+                "id": "7601fb75-80ae-4409-b31a-9acd58d45445",
+                "type": "question",
+                "responses": [
+                    {
+                        "id": "af89ffa0-5db2-4a49-93e5-7dd392ab8f10",
+                        "label": "Safe",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "af89ffa1-5db2-4a49-93e5-7dd392ab8f10",
+                        "label": "At Risk",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "af89ffa2-5db2-4a49-93e5-7dd392ab8f10",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ]
+            },
+            "b52a8b4c-048b-4f7d-99b9-c6b9680be5ed": {
+                "id": "b52a8b4c-048b-4f7d-99b9-c6b9680be5ed",
+                "type": "question",
+                "responses": [
+                    {
+                        "id": "2a2b8507-c53d-4d0e-83ec-164cb179b6a0",
+                        "label": "Pass",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "2a2b8507-c53d-4d0e-83ec-164cb179b6a1",
+                        "label": "Fail",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "2a2b8507-c53d-4d0e-83ec-164cb179b6a2",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ]
+            },
+            "c6c011ed-4ade-460d-a04b-da730834b667": {
+                "id": "c6c011ed-4ade-460d-a04b-da730834b667",
+                "type": "question",
+                "responses": [
+                    {
+                        "id": "060ace00-1f61-468e-9c42-918fa93badcf",
+                        "label": "Yes",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "060ace01-1f61-468e-9c42-918fa93badcf",
+                        "label": "No",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "e1f35e8c-c4c7-4186-92f6-aaf02bcde43a",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ]
+            },
+            "d743f356-a147-472c-a790-0c46a187de92": {
+                "id": "d743f356-a147-472c-a790-0c46a187de92",
+                "type": "question",
+                "responses": [
+                    {
+                        "id": "6bb1beb4-494e-4a17-bff7-bed8a6fcd3d0",
+                        "label": "Compliant",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "6bb1beb4-494e-4a17-bff7-bed8a6fcd3d1",
+                        "label": "Non-Compliant",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    },
+                    {
+                        "id": "6bb1beb4-494e-4a17-bff7-bed8a6fcd3d2",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ]
+            }
+        }
+    },
+    "header_items": [
+        {
+            "item_id": "f3245d39-ea77-11e1-aff1-0800200c9a66",
+            "label": "Title Page",
+            "type": "section",
+            "children": [
+                "f3245d42-ea77-11e1-aff1-0800200c9a66",
+                "f3245d43-ea77-11e1-aff1-0800200c9a66",
+                "f3245d44-ea77-11e1-aff1-0800200c9a66"
+            ]
+        },
+        {
+            "parent_id": "f3245d39-ea77-11e1-aff1-0800200c9a66",
+            "item_id": "f3245d42-ea77-11e1-aff1-0800200c9a66",
+            "label": "Conducted on",
+            "type": "datetime",
+            "options": {
+                "enable_date": true,
+                "enable_time": true
+            },
+            "responses": {
+                "datetime": "2020-11-24T04:29:53.179Z"
+            }
+        },
+        {
+            "parent_id": "f3245d39-ea77-11e1-aff1-0800200c9a66",
+            "item_id": "f3245d43-ea77-11e1-aff1-0800200c9a66",
+            "label": "Prepared by",
+            "type": "textsingle",
+            "responses": {
+                "text": "Tim Goodman"
+            }
+        },
+        {
+            "parent_id": "f3245d39-ea77-11e1-aff1-0800200c9a66",
+            "item_id": "f3245d44-ea77-11e1-aff1-0800200c9a66",
+            "label": "Location",
+            "type": "address",
+            "responses": {
+                "location_text": "9 Melton Terrace, Townsville QLD 4810, Australia\n(-19.256570099999998, 146.8198801)",
+                "location": {
+                    "name": "",
+                    "country": "Australia",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [
+                            146.8200228,
+                            -19.256487
+                        ]
+                    },
+                    "locality": "Townsville",
+                    "postal_code": "4810",
+                    "sub_locality": "",
+                    "thoroughfare": "Melton Terrace",
+                    "iso_country_code": "AU",
+                    "sub_thoroughfare": "9",
+                    "administrative_area": "QLD",
+                    "sub_administrative_area": "Townsville"
+                }
+            }
+        }
+    ],
+    "items": [
+        {
+            "item_id": "f27cefbd-7f05-4ac3-80c8-cb42d9b338d5",
+            "label": "Rental Property Inspection",
+            "type": "section",
+            "scoring": {
+                "combined_score": 24,
+                "combined_max_score": 24,
+                "combined_score_percentage": 100
+            },
+            "children": [
+                "6c609fe4-f74d-4522-b1db-8d02f76c0383",
+                "0ed6965a-78ab-49e4-8b67-29f6d3a32449",
+                "022f00fe-28f1-49c4-81e7-21bfc3f48962",
+                "506de4bb-b99f-4548-bc24-73c4251c3df1",
+                "dd2e1afb-149d-4269-a140-0182bb781709",
+                "3180b755-895b-407c-9b87-5660c0764993"
+            ]
+        },
+        {
+            "parent_id": "f27cefbd-7f05-4ac3-80c8-cb42d9b338d5",
+            "item_id": "6c609fe4-f74d-4522-b1db-8d02f76c0383",
+            "label": "Property Owner",
+            "type": "textsingle",
+            "responses": {
+                "text": "John Boomer"
+            }
+        },
+        {
+            "parent_id": "f27cefbd-7f05-4ac3-80c8-cb42d9b338d5",
+            "item_id": "0ed6965a-78ab-49e4-8b67-29f6d3a32449",
+            "label": "Living Room/Lounge",
+            "type": "category",
+            "scoring": {
+                "combined_score": 3,
+                "combined_max_score": 3,
+                "combined_score_percentage": 100
+            },
+            "children": [
+                "888d738b-88aa-46bc-af75-16942dcb1501",
+                "a442e612-27df-4119-bbc7-52c619d809d8",
+                "38c3b0e4-a7e6-4dd0-8cb2-cb8fafd55e03",
+                "3f0fbc50-2553-4d39-b4c7-2fb5f22c8775"
+            ]
+        },
+        {
+            "parent_id": "0ed6965a-78ab-49e4-8b67-29f6d3a32449",
+            "item_id": "888d738b-88aa-46bc-af75-16942dcb1501",
+            "label": "Condition of walls, look for paint or permanent damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca21",
+                        "label": "Fair",
+                        "colour": "255,176,0",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "0ed6965a-78ab-49e4-8b67-29f6d3a32449",
+            "item_id": "a442e612-27df-4119-bbc7-52c619d809d8",
+            "label": "Condition of windows, cracks, damaged to frames.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca23",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "0ed6965a-78ab-49e4-8b67-29f6d3a32449",
+            "item_id": "38c3b0e4-a7e6-4dd0-8cb2-cb8fafd55e03",
+            "label": "Floor cleanliness, free of stains/markings or damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca22",
+                        "label": "Poor",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    }
+                ],
+                "failed": true
+            }
+        },
+        {
+            "parent_id": "0ed6965a-78ab-49e4-8b67-29f6d3a32449",
+            "item_id": "3f0fbc50-2553-4d39-b4c7-2fb5f22c8775",
+            "label": "Living Room/Lounge Photo(s)",
+            "type": "media"
+        },
+        {
+            "parent_id": "f27cefbd-7f05-4ac3-80c8-cb42d9b338d5",
+            "item_id": "022f00fe-28f1-49c4-81e7-21bfc3f48962",
+            "label": "Kitchen",
+            "type": "category",
+            "scoring": {
+                "combined_score": 3,
+                "combined_max_score": 3,
+                "combined_score_percentage": 100
+            },
+            "children": [
+                "b568e041-78a7-4e65-9db8-3d166dcd3780",
+                "d8a9e4a6-bfc0-464c-a96b-dd5f11618568",
+                "5bc8b1da-52ba-4253-a715-011d1262653d"
+            ]
+        },
+        {
+            "parent_id": "022f00fe-28f1-49c4-81e7-21bfc3f48962",
+            "item_id": "b568e041-78a7-4e65-9db8-3d166dcd3780",
+            "label": "Are the appliances in good working condition?",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "c6c011ed-4ade-460d-a04b-da730834b667",
+                "failed_responses": [
+                    "060ace01-1f61-468e-9c42-918fa93badcf"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "060ace01-1f61-468e-9c42-918fa93badcf",
+                        "label": "No",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    }
+                ],
+                "failed": true
+            }
+        },
+        {
+            "parent_id": "022f00fe-28f1-49c4-81e7-21bfc3f48962",
+            "item_id": "d8a9e4a6-bfc0-464c-a96b-dd5f11618568",
+            "label": "Condition of kitchen bench-tops and cupboards, look for damage and markings.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ],
+                "is_mandatory": false
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca20",
+                        "label": "Good",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "022f00fe-28f1-49c4-81e7-21bfc3f48962",
+            "item_id": "5bc8b1da-52ba-4253-a715-011d1262653d",
+            "label": "Condition of kitchen walls, look for paint or permanent damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca22",
+                        "label": "Poor",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    }
+                ],
+                "failed": true
+            }
+        },
+        {
+            "parent_id": "f27cefbd-7f05-4ac3-80c8-cb42d9b338d5",
+            "item_id": "506de4bb-b99f-4548-bc24-73c4251c3df1",
+            "label": "Number of Bedrooms",
+            "type": "textsingle",
+            "scoring": {
+                "combined_score": 15,
+                "combined_max_score": 15,
+                "combined_score_percentage": 100
+            },
+            "options": {
+                "is_mandatory": true
+            },
+            "responses": {
+                "text": "5"
+            },
+            "children": [
+                "ccc59df6-5912-444a-b0d3-f5212cea8988",
+                "bdef1969-89c8-4ad9-9ed1-352d841467c1",
+                "14f42c63-e0e3-4512-a55f-eafddbd52bfa",
+                "0177527a-b846-4888-9b15-338c39bd75da"
+            ]
+        },
+        {
+            "parent_id": "506de4bb-b99f-4548-bc24-73c4251c3df1",
+            "item_id": "ccc59df6-5912-444a-b0d3-f5212cea8988",
+            "label": "",
+            "type": "smartfield",
+            "scoring": {
+                "combined_score": 6,
+                "combined_max_score": 6,
+                "combined_score_percentage": 100
+            },
+            "evaluation": true,
+            "options": {
+                "values": [
+                    "1"
+                ],
+                "condition": "f8b5db76-1941-444f-b14e-6f22109bb234"
+            },
+            "children": [
+                "e2321f21-236d-498d-a076-684e09693fa5"
+            ]
+        },
+        {
+            "parent_id": "ccc59df6-5912-444a-b0d3-f5212cea8988",
+            "item_id": "e2321f21-236d-498d-a076-684e09693fa5",
+            "label": "Main Bedroom",
+            "type": "category",
+            "scoring": {
+                "combined_score": 6,
+                "combined_max_score": 6,
+                "combined_score_percentage": 100
+            },
+            "children": [
+                "eb79a459-eee2-4eeb-8803-cbd47dbcb234",
+                "13ff32dc-409c-49f3-beb5-0a4d26a202c1",
+                "b145a562-a128-47bc-ab4d-92d3ac1c7bbd",
+                "d1c1feb0-0fca-4d02-a707-31b96be3a30b",
+                "ff5160de-9a7d-42fd-85ff-b5e64e963fcd"
+            ]
+        },
+        {
+            "parent_id": "e2321f21-236d-498d-a076-684e09693fa5",
+            "item_id": "eb79a459-eee2-4eeb-8803-cbd47dbcb234",
+            "label": "Condition of walls, look for paint or permanent damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ],
+                "is_mandatory": true
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca21",
+                        "label": "Fair",
+                        "colour": "255,176,0",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "e2321f21-236d-498d-a076-684e09693fa5",
+            "item_id": "13ff32dc-409c-49f3-beb5-0a4d26a202c1",
+            "label": "Condition of windows, cracks, damaged to frames.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ],
+                "is_mandatory": true
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca21",
+                        "label": "Fair",
+                        "colour": "255,176,0",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "e2321f21-236d-498d-a076-684e09693fa5",
+            "item_id": "b145a562-a128-47bc-ab4d-92d3ac1c7bbd",
+            "label": "Floor cleanliness, free of stains/markings or damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ],
+                "is_mandatory": true
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca23",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "e2321f21-236d-498d-a076-684e09693fa5",
+            "item_id": "d1c1feb0-0fca-4d02-a707-31b96be3a30b",
+            "label": "Related Photos",
+            "type": "media"
+        },
+        {
+            "parent_id": "e2321f21-236d-498d-a076-684e09693fa5",
+            "item_id": "ff5160de-9a7d-42fd-85ff-b5e64e963fcd",
+            "label": "Is there an Ensuite-Bathroom?",
+            "type": "question",
+            "scoring": {
+                "combined_score": 3,
+                "combined_max_score": 3,
+                "combined_score_percentage": 100
+            },
+            "options": {
+                "response_set": "4d2cbf27-b5fb-4b86-88d1-e58399f568ff",
+                "failed_responses": []
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "87a49131-b643-4c00-8d47-bbedc3ade59d",
+                        "label": "No",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "enable_score": false
+                    }
+                ],
+                "failed": false
+            },
+            "children": [
+                "68ca4078-6065-4ca1-9a8a-6fe3cc329558"
+            ]
+        },
+        {
+            "parent_id": "ff5160de-9a7d-42fd-85ff-b5e64e963fcd",
+            "item_id": "68ca4078-6065-4ca1-9a8a-6fe3cc329558",
+            "label": "",
+            "type": "smartfield",
+            "scoring": {
+                "combined_score": 3,
+                "combined_max_score": 3,
+                "combined_score_percentage": 100
+            },
+            "evaluation": true,
+            "options": {
+                "values": [
+                    "338e092f-7b8c-4cca-a62a-3461c30d9d39"
+                ],
+                "condition": "3f206182-e4f6-11e1-aff1-0800200c9a66"
+            },
+            "children": [
+                "81517305-c6a5-457e-9aef-411b70b41190",
+                "d5813ad5-7d6d-4e4a-b3dc-765b612c0a91",
+                "cf2324a6-f001-40f4-a8da-69643392037c"
+            ]
+        },
+        {
+            "parent_id": "68ca4078-6065-4ca1-9a8a-6fe3cc329558",
+            "item_id": "81517305-c6a5-457e-9aef-411b70b41190",
+            "label": "Condition of Bathroom Shower/Bathtub",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca21",
+                        "label": "Fair",
+                        "colour": "255,176,0",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "68ca4078-6065-4ca1-9a8a-6fe3cc329558",
+            "item_id": "d5813ad5-7d6d-4e4a-b3dc-765b612c0a91",
+            "label": "Condition of Sinks and Taps",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca20",
+                        "label": "Good",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "68ca4078-6065-4ca1-9a8a-6fe3cc329558",
+            "item_id": "cf2324a6-f001-40f4-a8da-69643392037c",
+            "label": "Condition of Toilet",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca23",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "506de4bb-b99f-4548-bc24-73c4251c3df1",
+            "item_id": "bdef1969-89c8-4ad9-9ed1-352d841467c1",
+            "label": "",
+            "type": "smartfield",
+            "scoring": {
+                "combined_score": 3,
+                "combined_max_score": 3,
+                "combined_score_percentage": 100
+            },
+            "evaluation": true,
+            "options": {
+                "values": [
+                    "2"
+                ],
+                "condition": "f8b5db76-1941-444f-b14e-6f22109bb234"
+            },
+            "children": [
+                "eee7cfee-5047-4023-b4e8-055678b46bac"
+            ]
+        },
+        {
+            "parent_id": "bdef1969-89c8-4ad9-9ed1-352d841467c1",
+            "item_id": "eee7cfee-5047-4023-b4e8-055678b46bac",
+            "label": "Additional Bedrooms",
+            "type": "category",
+            "scoring": {
+                "combined_score": 3,
+                "combined_max_score": 3,
+                "combined_score_percentage": 100
+            },
+            "children": [
+                "5c3b7286-8742-43ef-8147-5ab9159f4f74",
+                "710b8bb7-fee2-453c-aba1-ccd5d0e4fb21",
+                "3b211cae-f588-411b-ac9c-348f88e5aeb3"
+            ]
+        },
+        {
+            "parent_id": "eee7cfee-5047-4023-b4e8-055678b46bac",
+            "item_id": "5c3b7286-8742-43ef-8147-5ab9159f4f74",
+            "label": "Condition of walls, look for paint or permanent damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ],
+                "is_mandatory": true
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca23",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "eee7cfee-5047-4023-b4e8-055678b46bac",
+            "item_id": "710b8bb7-fee2-453c-aba1-ccd5d0e4fb21",
+            "label": "Condition of windows, cracks, damaged to frames.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ],
+                "is_mandatory": true
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca23",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "eee7cfee-5047-4023-b4e8-055678b46bac",
+            "item_id": "3b211cae-f588-411b-ac9c-348f88e5aeb3",
+            "label": "Floor cleanliness, free of stains/markings or damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ],
+                "is_mandatory": true
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca21",
+                        "label": "Fair",
+                        "colour": "255,176,0",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "506de4bb-b99f-4548-bc24-73c4251c3df1",
+            "item_id": "14f42c63-e0e3-4512-a55f-eafddbd52bfa",
+            "label": "",
+            "type": "smartfield",
+            "scoring": {
+                "combined_score": 3,
+                "combined_max_score": 3,
+                "combined_score_percentage": 100
+            },
+            "evaluation": true,
+            "options": {
+                "values": [
+                    "3"
+                ],
+                "condition": "f8b5db76-1941-444f-b14e-6f22109bb234"
+            },
+            "children": [
+                "9a167089-88b4-48fe-a33a-d0fd437c8a13",
+                "d18caa51-b32d-4e8f-9713-eab8bca3daa2",
+                "9d85dd85-0f98-4988-a690-815b47ae1a43"
+            ]
+        },
+        {
+            "parent_id": "14f42c63-e0e3-4512-a55f-eafddbd52bfa",
+            "item_id": "9a167089-88b4-48fe-a33a-d0fd437c8a13",
+            "label": "Condition of walls, look for paint or permanent damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca20",
+                        "label": "Good",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "14f42c63-e0e3-4512-a55f-eafddbd52bfa",
+            "item_id": "d18caa51-b32d-4e8f-9713-eab8bca3daa2",
+            "label": "Condition of windows, cracks, damaged to frames.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca22",
+                        "label": "Poor",
+                        "colour": "198,0,34",
+                        "score": 0,
+                        "failed": true,
+                        "enable_score": true
+                    }
+                ],
+                "failed": true
+            }
+        },
+        {
+            "parent_id": "14f42c63-e0e3-4512-a55f-eafddbd52bfa",
+            "item_id": "9d85dd85-0f98-4988-a690-815b47ae1a43",
+            "label": "Floor cleanliness, free of stains/markings or damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca20",
+                        "label": "Good",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "506de4bb-b99f-4548-bc24-73c4251c3df1",
+            "item_id": "0177527a-b846-4888-9b15-338c39bd75da",
+            "label": "",
+            "type": "smartfield",
+            "scoring": {
+                "combined_score": 3,
+                "combined_max_score": 3,
+                "combined_score_percentage": 100
+            },
+            "evaluation": true,
+            "options": {
+                "values": [
+                    "4"
+                ],
+                "condition": "f8b5db76-1941-444f-b14e-6f22109bb234"
+            },
+            "children": [
+                "f9b46cd5-7765-46f8-aae3-bdf1a261a2c7",
+                "d12b1bc1-38c9-4253-a245-2fc6486cf0e2",
+                "5977f058-553d-4948-91b4-fe34414a8850"
+            ]
+        },
+        {
+            "parent_id": "0177527a-b846-4888-9b15-338c39bd75da",
+            "item_id": "f9b46cd5-7765-46f8-aae3-bdf1a261a2c7",
+            "label": "Condition of walls, look for paint or permanent damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca21",
+                        "label": "Fair",
+                        "colour": "255,176,0",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "0177527a-b846-4888-9b15-338c39bd75da",
+            "item_id": "d12b1bc1-38c9-4253-a245-2fc6486cf0e2",
+            "label": "Condition of windows, cracks, damaged to frames.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca23",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "0177527a-b846-4888-9b15-338c39bd75da",
+            "item_id": "5977f058-553d-4948-91b4-fe34414a8850",
+            "label": "Floor cleanliness, free of stains/markings or damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca20",
+                        "label": "Good",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "f27cefbd-7f05-4ac3-80c8-cb42d9b338d5",
+            "item_id": "dd2e1afb-149d-4269-a140-0182bb781709",
+            "label": "Other Areas",
+            "type": "category",
+            "scoring": {
+                "combined_score": 3,
+                "combined_max_score": 3,
+                "combined_score_percentage": 100
+            },
+            "children": [
+                "9a5f453d-8e64-4483-a990-690147a70846",
+                "40777d3b-5304-47f7-a621-b9339e7f2123",
+                "6f54acb0-cbca-4972-92a2-302e73223bd6",
+                "57da983c-f11b-4e0b-aa20-51d98c76806d",
+                "ff835444-1b93-4cf0-84aa-3182827552cb"
+            ]
+        },
+        {
+            "parent_id": "dd2e1afb-149d-4269-a140-0182bb781709",
+            "item_id": "9a5f453d-8e64-4483-a990-690147a70846",
+            "label": "Other Area Name",
+            "type": "textsingle"
+        },
+        {
+            "parent_id": "dd2e1afb-149d-4269-a140-0182bb781709",
+            "item_id": "40777d3b-5304-47f7-a621-b9339e7f2123",
+            "label": "Condition of walls, look for paint or permanent damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca23",
+                        "label": "N/A",
+                        "colour": "112,112,112",
+                        "score": 1,
+                        "enable_score": false
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "dd2e1afb-149d-4269-a140-0182bb781709",
+            "item_id": "6f54acb0-cbca-4972-92a2-302e73223bd6",
+            "label": "Condition of windows, cracks, damaged to frames.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca20",
+                        "label": "Good",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "dd2e1afb-149d-4269-a140-0182bb781709",
+            "item_id": "57da983c-f11b-4e0b-aa20-51d98c76806d",
+            "label": "Floor cleanliness, free of stains/markings or damage.",
+            "type": "question",
+            "scoring": {
+                "score": 1,
+                "max_score": 1,
+                "score_percentage": 100
+            },
+            "options": {
+                "response_set": "5b69aee5-0532-46a4-b2f5-d020d4d5381d",
+                "failed_responses": [
+                    "ef4abf51-3361-46f5-ba04-70c23c85ca22"
+                ]
+            },
+            "responses": {
+                "selected": [
+                    {
+                        "id": "ef4abf51-3361-46f5-ba04-70c23c85ca20",
+                        "label": "Good",
+                        "colour": "19,133,95",
+                        "score": 1,
+                        "enable_score": true
+                    }
+                ],
+                "failed": false
+            }
+        },
+        {
+            "parent_id": "dd2e1afb-149d-4269-a140-0182bb781709",
+            "item_id": "ff835444-1b93-4cf0-84aa-3182827552cb",
+            "label": "Other Area Photo(s)",
+            "type": "media"
+        },
+        {
+            "parent_id": "f27cefbd-7f05-4ac3-80c8-cb42d9b338d5",
+            "item_id": "3180b755-895b-407c-9b87-5660c0764993",
+            "label": "Completion Details",
+            "type": "category",
+            "children": [
+                "83740e26-d58c-4c94-9bc8-f3c42ad343e2",
+                "86a17dda-1e33-4396-9d53-ec859830497e"
+            ]
+        },
+        {
+            "parent_id": "3180b755-895b-407c-9b87-5660c0764993",
+            "item_id": "83740e26-d58c-4c94-9bc8-f3c42ad343e2",
+            "label": "Agent Completing Inspection",
+            "type": "textsingle",
+            "options": {
+                "is_mandatory": true
+            },
+            "responses": {
+                "text": "Tim"
+            }
+        },
+        {
+            "parent_id": "3180b755-895b-407c-9b87-5660c0764993",
+            "item_id": "86a17dda-1e33-4396-9d53-ec859830497e",
+            "label": "Completion Date",
+            "type": "datetime",
+            "options": {
+                "is_mandatory": true,
+                "enable_date": true,
+                "enable_time": false
+            },
+            "responses": {
+                "datetime": "2020-11-24T04:30:43.000Z"
+            }
+        }
+    ]
+}
