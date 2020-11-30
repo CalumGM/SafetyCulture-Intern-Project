@@ -1,68 +1,129 @@
 <%- include('../_partial/_header'); -%>
 
-<h1>Welcome to the Home Page</h1>
-<canvas id="myChart"></canvas>
-<script>
-    var myChart = document.getElementById('myChart').getContext('2d');
-    console.log("js working")
+<% if(currentUser != null) { %>
+    <h1><%= currentUser.username %>'s Home Page</h1>
+<%}%>
+<% if(currentUser == null) { %> 
+    <h1>Welcome to the Home Page</h1>
+    <h6>Log in or Sign up to continue</h6>
+<% } %>
+<div class="container-fluid">
+    <div class="row"> <!--bootstrap grid layout-->
+      <div class="col-md-6 bg-success">
+        <canvas id="topCanvas"></canvas>
+      </div>
+      <div class="col-md-6 bg-warning">
+        <canvas id="bottomCanvas"></canvas>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Talk about a screen design to display some data</h3>
+        </div>
+    </div>
+  </div>
+
+<script> // graph plotting using Chartjs
+    var topCanvasjs = document.getElementById('topCanvas').getContext('2d');
+    var bottomCanvasjs = document.getElementById('bottomCanvas').getContext('2d');
     // Global Options
     Chart.defaults.global.defaultFontFamily.Chart = 'Lato';
     Chart.defaults.global.defaultFontSize.Chart = 18;
     Chart.defaults.global.defaultFontColor.Chart = '#000';
+    Chart.defaults.global.hover.mode = 'nearest';
 
-    var massPopChart = new Chart(myChart, {
-        type:'bar', // bar, horizontal, pie, line, doughnut, radar, polarArea
-        data:{
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-        },
-        options:{
-            title:{
-                display:true,
-                text:'Sick as Title',
-                fontSize: 25,
-                fontColor: '#000'
-            },
-            legend:{
-                display: false, // set to true to show the legend
-                position:'right',
-                labels:{
+    barChartData = {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)','rgba(54, 162, 235, 0.2)','rgba(255, 206, 86, 0.2)','rgba(75, 192, 192, 0.2)','rgba(153, 102, 255, 0.2)','rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)','rgba(54, 162, 235, 1)','rgba(255, 206, 86, 1)','rgba(75, 192, 192, 1)','rgba(153, 102, 255, 1)','rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+                }]
+            };
+    barChartOptions = {
+                title:{
+                    display:true,
+                    text:'Bar Chart',
+                    fontSize: 25,
                     fontColor: '#000'
+                },
+                legend:{
+                    display: false, // set to true to show the legend
+                    position:'right',
+                    labels:{
+                        fontColor: '#000'
+                    }
+                },
+                layout:{
+                    padding:{
+                        left:0, right:0, bottom:0, top:0
+                    }
+                },
+                scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
                 }
-            },
-            layout:{
-                padding:{
-                    left:0, right:0, bottom:0, top:0
+            };
+    lineChartData = {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)','rgba(54, 162, 235, 0.2)','rgba(255, 206, 86, 0.2)','rgba(75, 192, 192, 0.2)','rgba(153, 102, 255, 0.2)','rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)','rgba(54, 162, 235, 1)','rgba(255, 206, 86, 1)','rgba(75, 192, 192, 1)','rgba(153, 102, 255, 1)','rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+                }]
+            };
+    lineChartOptions = {
+                title:{
+                    display:true,
+                    text:'Line Graph',
+                    fontSize: 25,
+                    fontColor: '#000'
+                },
+                legend:{
+                    display: false, // set to true to show the legend
+                    position:'right',
+                    labels:{
+                        fontColor: '#000'
+                    }
+                },
+                layout:{
+                    padding:{
+                        left:0, right:0, bottom:0, top:0
+                    }
+                },
+                scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
                 }
-            },
-            scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-        }
+            };
+    var topChart = new Chart(topCanvasjs, {
+        type:'bar', // bar, horizontal, pie, line, doughnut, radar, polarArea
+        data:barChartData,
+        options:barChartOptions
     });
+    var bottomChart = new Chart(bottomCanvasjs, {
+        type: 'line',
+        data: lineChartData,
+        options: lineChartOptions
+    });
+    var thirdChart = new Chart()
 </script>
 <%- include ('../_partial/_footer'); -%>

@@ -1,13 +1,13 @@
 var express = require("express");
 var passport = require("passport");
+var ensureAuthenticated = require("../../auth/auth").ensureAuthenticated;
 
 var User = require("../../models/user");
 
 var router = express.Router();
 
-
+// these functions define a route and where to redirect the user on each route
 router.get("/", function (req, res) {
-   // console.log("hello I'm on the start page");
    res.render("home/");
 });
 
@@ -39,15 +39,15 @@ router.get("/signup", function (req, res) {
 });
 
 router.post("/signup", function (req, res, next) {
-   var username = req.body.username;
+   var username = req.body.username; // gets username from ...
    var email = req.body.email;
    var password = req.body.password;
 
    User.findOne({ email: email }, function (err, user) {
       if (err) { return next(err); }
       if (user) {
-         req.flash("error", "There's already an account with this email");
-         return res.redirect("/signup");
+         req.flash("error", "There's already an account with this email"); // send error message to _header.ejs
+         return res.redirect("/signup"); // go back to the signup page
       }
 
       var newUser = new User({
@@ -56,12 +56,12 @@ router.post("/signup", function (req, res, next) {
          email: email
       });
 
-      newUser.save(next);
+      newUser.save(next); // magic function that saves newUser to db??
 
    });
 
 }, passport.authenticate("login", {
-   successRedirect: "/",
+   successRedirect: "/", // after logging in, the user is sent back to index.ejs
    failureRedirect: "/signup",
    failureFlash: true
 }));

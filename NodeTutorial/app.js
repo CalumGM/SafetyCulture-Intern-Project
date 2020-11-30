@@ -11,7 +11,7 @@ var params = require("./params/params");
 var setUpPassport = require("./setuppassport");
 //var routes = require("./routes");
 
-var app = express();
+var app = express(); // app is an instance of express, used for routing
 mongoose.connect(params.DATABASECONNECTION, {useUnifiedTopology:true, useNewUrlParser:true, useCreateIndex:true});
 setUpPassport();
 
@@ -21,7 +21,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(cookieParser());
 app.use(session({
-    secret:"doemlfgddfsoi!gjdsf5684561dsf",
+    secret:"doemlfgddfsoi!gjdsf5684561dsf", // secret code thingo??
     resave:false,
     saveUninitialized:false
 }));
@@ -33,6 +33,6 @@ app.use(flash());
 app.use("/", require("./routes/web"));
 app.use("/api", require("./routes/api"));
 
-app.listen(app.get("port"), function(){
+app.listen(app.get("port"), function(){ // start localhost
     console.log("Server started on port " + app.get("port"));
 })
