@@ -10,13 +10,9 @@ var router = express.Router();
 
 router.use(ensureAuthenticated);// ensures that all routes in this route are now authenticated
 
-
-
-
 router.get("/", function(req, res){ // implicit /post before each of these routes
     Post.find({userID:req.user._id}).exec(function(err, posts){ // find in database
         if(err){console.log(err);}
-        console.log(posts);
         res.render("post/posts", {posts:posts}); // passing on the posts that were found matching the userID
     });
  });

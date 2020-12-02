@@ -22,7 +22,8 @@
            <li><a href="/about">About</a></li>
    
            <% if(currentUser != null) { %>
-            <li><a href="/inspections">My Posts</a></li>
+            <li><a href="/posts">My Posts</a></li>
+            <li><a href="/inspections">View Inspections</a></li>
             <li><a href="#">Welcome <%= currentUser.username %></a></li>
             <li><a href="/logout">Logout</a></li>
            <%}%>
