@@ -18,11 +18,11 @@ DATABASE_URL = "mongodb+srv://calum_maitland:InternDatabase@cluster0.qg16e.mongo
 
 auth_data = {'username': USER, 'password': PWD, 'grant_type': GRANT_TYPE}
 headers = {}
-audit_data_list = []  # maybe move this into main scope?
+audit_data_list = []
 
 
 def main():
-    """"""
+    """main does main things"""
     authenticate()
     db_client, db_col = db_connect()
     if db_col.estimated_document_count() > 0:  # if db has documents
@@ -43,8 +43,6 @@ def authenticate():
     """Authenticate user credentials and create header for API requests"""
     auth_response = requests.post(AUTH_URL, data=auth_data)
     auth_json = auth_response.json()
-    print("Authorized: " + str(auth_response), auth_response.text)
-
     # format access token
     access_token = auth_json['token_type'] + ' ' + auth_json['access_token']
     headers['Authorization'] = access_token
@@ -56,9 +54,6 @@ def retrieve_audit_ids(url):
     template_search = requests.get(url, headers=headers)
     audit_list = template_search.json()
     audit_list = audit_list['audits']
-
-    print("Audit count : " + str(len(audit_list)))  # found audits: currently expected to be 201
-
     return audit_list
 
 
@@ -86,7 +81,6 @@ def db_connect():
     db_client = pymongo.MongoClient(DATABASE_URL)
     db_name = db_client['RealEstateData']
     db_col = db_name['Inspections']  # database 'columns'
-
     return db_client, db_col
 
 
