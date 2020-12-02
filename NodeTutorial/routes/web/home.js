@@ -7,6 +7,7 @@ var User = require("../../models/user");
 var router = express.Router();
 
 // these functions define a route and where to redirect the user on each route
+// <express.Router()>.<HTTP request method>(<path on the server>, <the function executed when the route is matched>)
 router.get("/", function (req, res) {
    res.render("home/");
 });

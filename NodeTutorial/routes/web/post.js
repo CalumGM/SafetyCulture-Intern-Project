@@ -3,23 +3,28 @@ var express = require("express");
 var ensureAuthenticated = require("../../auth/auth").ensureAuthenticated;
 
 var Post = require("../../models/post");
+var Inspection = require("../../models/inspection");
+
 
 var router = express.Router();
 
 router.use(ensureAuthenticated);// ensures that all routes in this route are now authenticated
 
-router.get("/", function(req, res){ // when the posts page is loaded
+
+
+
+router.get("/", function(req, res){ // implicit /post before each of these routes
     Post.find({userID:req.user._id}).exec(function(err, posts){ // find in database
         if(err){console.log(err);}
-
+        console.log(posts);
         res.render("post/posts", {posts:posts}); // passing on the posts that were found matching the userID
     });
  });
 
-
  router.get("/add", function(req, res){
     res.render("post/addpost");
  });
+
 
  router.post("/add", function(req, res){ // when an 'add' request is made by the html button
 
@@ -33,7 +38,6 @@ router.get("/", function(req, res){ // when the posts page is loaded
         if(err){console.log(err);}
         res.redirect("/posts"); // after making a post, go to the posts page
     });
-
  });
 
  // localhost:3000/posts/12345 --> fetch the post with id 12345

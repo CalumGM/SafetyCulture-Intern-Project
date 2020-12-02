@@ -1,0 +1,27 @@
+<%- include('../_partial/_header'); -%>
+
+<div class="row">
+    <div class="col-md-6">
+        <h1>My Inspections</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6" style="margin-bottom:10px;">
+        <!-- <a href="/posts/add" type="button" class="btn btn-default">New Post</a> -->
+        <!-- <a href="/posts/view" type="button" class="btn btn-default">View Audits</a> -->
+    </div>
+</div>
+
+<% inspections.forEach(function(inspection) { %> <!-- loop through every post passed through-->
+    <!-- inspection.header_items.forEach(function(header_item) {}
+        print(header_item['parent_id'])
+        )}-->
+    <div class="col-sm-4 col-md-4">
+        <h3><%= inspection.audit_id %></h3>
+        <p><%= inspection.createdAt %></p>
+        <h1><%= myVariable %></h1>
+    </div>
+<% }) %>
+
+<%- include ('../_partial/_footer'); -%>
