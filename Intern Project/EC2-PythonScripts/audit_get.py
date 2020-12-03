@@ -25,15 +25,14 @@ def main():
     """main does main things"""
     authenticate()
     db_client, db_col = db_connect()
-    if db_col.estimated_document_count() > 0:  # if db has documents
-        # execute code that adds all new audits
-        url = get_datetime()
-        pass
+    x = int(db_col.estimated_document_count())
+    if x > 0:  # if db has documents
+       # execute code that adds all new audits
+       url = get_datetime()
     else:
-        # execute code that adds all audits
+       # execute code that adds all audits
         url = TEMPLATE_SEARCH_URL
     audit_list = retrieve_audit_ids(url)
-    print(audit_list)
     retrieve_audit_data(audit_list)
     write_to_db(db_col)
     close_db(db_client)
@@ -80,7 +79,7 @@ def db_connect():
     """Connect to the mongodb cloud"""
     db_client = pymongo.MongoClient(DATABASE_URL)
     db_name = db_client['RealEstateData']
-    db_col = db_name['Inspections']  # database 'columns'
+    db_col = db_name['temp_inspections']  # database 'columns'
     return db_client, db_col
 
 
