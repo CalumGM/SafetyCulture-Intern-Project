@@ -17,6 +17,7 @@ router.use(function(req,res, next){
 
 router.use("/", require("./home"));
 router.use("/inspections", require("./inspection"));
+router.use("/dashboard", require("./dashboard"));
 router.use("/posts", require("./post"));
 
 
