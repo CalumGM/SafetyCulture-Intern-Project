@@ -1,41 +1,11 @@
 <%- include('../_partial/_header'); -%>
-<script>
-    function toggleText(audit_id){
-        // hide all the others
-        // show the one that matches the audit_id
-        //console.log(audit_id);
 
-        var inspection_objects = document.getElementsByClassName('lefthandselector');
-
-        for (var i=0; i < inspection_objects.length; i++){
-            inspection_objects[i].style.display = "none";
-        }
-        
-        var view_inspection = document.getElementById(audit_id);
-        view_inspection.style.display = "block";
-    }
-</script>
-<div class="row">
-    
-    <div class="col-md-4">
-        <h1>My Inspections</h1>
-            <ul class="list-group">
-                <% inspections.forEach(function(inspection) { %> <!-- loop through every inspection passed through-->
-                <a onclick="toggleText('<%= inspection.audit_id %>')" class="list-group-item"><%= inspection.audit_id %></a>
-                <% }) %>
-            </ul>
-    <!-- inspection.header_items.forEach(function(header_item) {}
-        print(header_item['parent_id'])
-        )}-->
-    </div>
-    <% inspections.forEach(function(inspection) { %>
-    <div class="col-md-8 lefthandselector" id="<%=inspection.audit_id%>" style="display:none">
-        <h4><%= inspection.header_items[2].responses.text%></h4>
-        <!-- put all the other data in here-->
-    </div>
-    <% }) %>
+<%- include('../_partial/_select_agent'); -%>
+<div class="col-md-4">
+    <h2> This should be in the 3rd column</h2>
 </div>
-
-
-
+<div class="col-md-4">
+    <h2> This should be in the 4th column</h2>
+</div>
+</div> <!-- ends the row div, place columns above this-->
 <%- include ('../_partial/_footer'); -%>
