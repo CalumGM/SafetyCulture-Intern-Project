@@ -1,18 +1,19 @@
 var express = require("express");
 var passport = require("passport");
 var ensureAuthenticated = require("../../auth/auth").ensureAuthenticated;
-
+var afterLogin = "/dashboard"
 var User = require("../../models/user");
 
 var router = express.Router();
 
 // these functions define a route and where to redirect the user on each route
+// <express.Router()>.<HTTP request method>(<path on the server>, <the function executed when the route is matched>)
 router.get("/", function (req, res) {
    res.render("home/");
 });
 
 router.get("/home", function (req, res) {
-   res.render("home/home");
+   res.render("home/home"); 
 });
 
 router.get("/about", function (req, res) {
@@ -29,7 +30,7 @@ router.get("/logout", function(req, res){
 });
 
 router.post("/login", passport.authenticate("login", {
-   successRedirect: "/",
+   successRedirect: afterLogin,
    failureRedirect: "/login",
    failureFlash: true
 }));
@@ -60,8 +61,9 @@ router.post("/signup", function (req, res, next) {
 
    });
 
-}, passport.authenticate("login", {
-   successRedirect: "/", // after logging in, the user is sent back to index.ejs
+}, 
+   passport.authenticate("login", {
+   successRedirect: afterLogin, // after logging in, the user is sent back to index.ejs
    failureRedirect: "/signup",
    failureFlash: true
 }));

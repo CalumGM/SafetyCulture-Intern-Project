@@ -10,7 +10,7 @@ var userSchema = mongoose.Schema({ // database entry format
     createdAt:{type:Date, default:Date.now}
 });
 
-userSchema.pre("save", function(done){ // pre function executes before 
+userSchema.pre("save", function(done){ // pre function executes before saving
     var user = this;
 
     if(!user.isModified("password")){
