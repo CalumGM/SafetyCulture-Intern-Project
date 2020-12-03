@@ -44,6 +44,7 @@ router.get("/:postId", function(req,res){ // :postID represents a variable param
 });
 
 router.get("/edit/:postId", function(req,res){ // :postID represents a variable parameter as a route
+    console.log(req.params);
     Post.findById(req.params.postId).exec(function(err, post){
         res.render("post/editpost",{post:post});
     });
