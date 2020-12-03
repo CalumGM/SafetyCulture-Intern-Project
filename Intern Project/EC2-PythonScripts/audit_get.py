@@ -27,10 +27,10 @@ def main():
     db_client, db_col = db_connect()
     x = int(db_col.estimated_document_count())
     if x > 0:  # if db has documents
-       # execute code that adds all new audits
-       url = get_datetime()
+        # execute code that adds all new audits
+        url = get_datetime()
     else:
-       # execute code that adds all audits
+        # execute code that adds all audits
         url = TEMPLATE_SEARCH_URL
     audit_list = retrieve_audit_ids(url)
     retrieve_audit_data(audit_list)
@@ -49,7 +49,6 @@ def authenticate():
 
 def retrieve_audit_ids(url):
     """Use a pre-determined template_id to find any audits made from that template"""
-    # template_search = requests.get(TEMPLATE_SEARCH_URL, headers=headers)
     template_search = requests.get(url, headers=headers)
     audit_list = template_search.json()
     audit_list = audit_list['audits']
@@ -88,9 +87,6 @@ def write_to_db(db_col):
     for audit in audit_data_list:
         dbEntry = audit
         db_col.insert_one(dbEntry)
-
-    # use audit id to prevent duplicates
-    # insertion of test dict
 
 
 def close_db(db_client):
