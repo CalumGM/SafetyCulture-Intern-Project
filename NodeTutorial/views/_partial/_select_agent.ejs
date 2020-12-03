@@ -1,0 +1,36 @@
+<script>
+    function toggleText(agent_name_selected){
+        // hide all the others
+        // show the one that matches the audit_id
+        //console.log(audit_id);
+
+        var inspection_objects = document.getElementsByClassName('lefthandselector');
+
+        for (var i=0; i < inspection_objects.length; i++){
+            inspection_objects[i].style.display = "none";
+        }
+        
+        var view_inspection = document.getElementById(agent_name_selected);
+        view_inspection.style.display = "block";
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-4">
+        <h1>My Inspections</h1>
+            <ul class="list-group">
+                <a onclick="toggleText('all_agents')" class="list-group-item">All Agents</a>
+                <% agents.forEach(function(agent) { %> <!-- loop through every inspection passed through-->
+                <a href="../inspections/<%= agent.agent_name %>" class="list-group-item"><%= agent.agent_name %></a>
+                <% }) %>
+            </ul>
+    <!-- inspection.header_items.forEach(function(header_item) {}
+        print(header_item['parent_id'])
+        )}-->
+    </div>
+    <% agents.forEach(function(agent) { %>
+    <div class="col-md-8 lefthandselector" id="<%=agent.agent_name%>" style="display:none">
+        <h4><%= agent.agent_name%></h4>
+        <!-- put all the other data in here-->
+    </div>
+    <% }) %>
