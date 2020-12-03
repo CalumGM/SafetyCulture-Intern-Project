@@ -17,7 +17,11 @@ router.use(function(req,res, next){
 
 router.use("/", require("./home"));
 router.use("/inspections", require("./inspection"));
+<<<<<<< HEAD
 router.use("/dashboard", require("./dashboard"));
+=======
+
+>>>>>>> origin/retrofit
 router.use("/posts", require("./post"));
 
 
