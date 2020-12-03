@@ -17,14 +17,15 @@
            <a class="navbar-brand" href="/">Real Estate Dashboard</a>
            </div>
            <ul class="nav navbar-nav navbar-right">
-               <!-- these hrefs redirect to the routes in home.js, not the view files-->
+           <% if(currentUser != null) { %>
+                <li><a href="#">Welcome, <%= currentUser.username %></a></li>
+           <%}%>
+           <!-- these hrefs redirect to the routes in home.js, not the view files-->
            <li><a href="/home">Home</a></li>
            <li><a href="/about">About</a></li>
-   
+           <li><a href="/dashboard">Dashboard</a></li> 
            <% if(currentUser != null) { %>
-            <li><a href="/posts">My Posts</a></li>
-            <li><a href="/inspections">View Inspections</a></li>
-            <li><a href="#">Welcome <%= currentUser.username %></a></li>
+            <li><a href="/inspections">Inspections</a></li>
             <li><a href="/logout">Logout</a></li>
            <%}%>
            <% if(currentUser == null) { %> 
