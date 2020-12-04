@@ -10,17 +10,23 @@ DATABASE_URL = "mongodb+srv://calum_maitland:InternDatabase@cluster0.qg16e.mongo
 
 def main():
     """main bruh"""
+    # DOTO LIST:
+    # TODO replace unique name list with a set (automatically scans for unique) in reformat_audits
+    # TODO create list for agent dictionaries to be written to (in preperation for writing to db)
+    #
+    #
     db_client, db_retrieve_col, db_audits_col, db_agents_col = db_connect()  # setup collections for other functions to use
-    audit_list, agent_list = reformat_audits(db_retrieve_col=db_retrieve_col)
+    audit_dict_list, agent_list = reformat_audits(db_retrieve_col=db_retrieve_col)
 
     # unique_agent_list = identify_unique_agents(agent_list)
     unique_agent_list = ["Donald Glover", "Calum Hawaii", "Chris Ornott"]
 
     agent_pull = emulate_agent_db()  # emulates the db for code construction purposes
 
-    daily_agent_transform(agent_list=agent_list, db_retrieve_col=db_retrieve_col)  # WIP function
+    agent_dict_list = daily_agent_transform(unique_agent_list=unique_agent_list, db_emulation=agent_pull,
+                                            audit_dict_list=audit_dict_list)  # WIP function
 
-    # write_to_db(db_audits_col=db_audits_col, db_agents_col=db_agents_col, audit_list=audit_list)
+    write_to_db(db_audits_col=db_audits_col, db_agents_col=db_agents_col, audit_dict_list=audit_dict_list, agent_dict_list=agent_dict_list)
     db_client.close()
 
 
@@ -37,13 +43,12 @@ def emulate_agent_db():
     time_series_inspection_count = []  # simple count of inspections done per day
 
     for agent in agent_pull:
-        for x in range (0,5):
+        for x in range(0, 5):
             time_series_score.append(round(random.uniform(75, 100), 4))
             time_series_inspection_count.append(random.randint(0, 7))
         agent["time_series"][0] = time_series_score
         agent["time_series"][1] = time_series_inspection_count
 
-    print(agent_pull)
     return agent_pull
 
 
@@ -74,7 +79,7 @@ def db_connect():
 
 def reformat_audits(db_retrieve_col):
     """find audits from inspection and reformat them"""
-    audit_list = []
+    audit_dict_list = []
     agent_list = []
 
     for audit in db_retrieve_col.find({}, {"_id": 0, "audit_id": 1, "audit_data.score": 1, "audit_data.total_score": 1,
@@ -89,7 +94,8 @@ def reformat_audits(db_retrieve_col):
                                                   "%Y-%m-%dT%H:%I:%S.%fZ")
         date = datetime_var.strftime("%d/%m/%Y")
         agent_name = audit["header_items"][2]["responses"]["text"]
-        agent_list.append(agent_name)
+        agent_list.append(
+            agent_name)  # TODO make into a set so that it will only append unique names. Can take out identify_unique_agents() as a result
         address_lat_long = str(audit["header_items"][3]["responses"]["location_text"]).split("\n")
         address = address_lat_long[0]
         lat_long = address_lat_long[1].split(",")
@@ -100,26 +106,52 @@ def reformat_audits(db_retrieve_col):
         new_audit_dict = {"audit_id": audit["audit_id"], "agent_name": agent_name, "date": date,
                           "scores": {"score": score, "total_score": total_score, "score_percentage": score_percentage},
                           "location": {"text": address, "lat": lat, "long": long}}
-        audit_list.append(new_audit_dict)
+        audit_dict_list.append(new_audit_dict)
 
-    return audit_list, agent_list
+    return audit_dict_list, agent_list
 
 
 # TODO two functions. one for once off and other for daily. first below is now daily
-def daily_agent_transform(agent_list, db_retrieve_col):
+def daily_agent_transform(unique_agent_list, db_emulation, audit_dict_list):
     """"""
-    # rundown.
-    # for loop with unique agent names.
-    #   avg score (for percentages) gets original avg, * by original count, result + new avg (however many times that is), that result/(count+however many new audits there are)
-    #   inspection count += new audit count
-    #   time series [0] = essentially append any new percent on the end, sorted by date (assumed) - and expect 0s for no data
-    #   time series [1] = append the count of new audits under agent name on the end
-    #   TODO: will need a way to store info for writing to db
+    # TODO: will need a way to store info for writing to db
+    agent_dict_list = []
+    for agent in unique_agent_list:
+        # TODO db query for info using agent name
 
+        # get old scores
+        historical_score = float(db_emulation[0]["avg_score"])
+        historical_inspection_count = int(db_emulation[0]["total_inspection_count"])
+        historical_time_series = db_emulation[0]["time_series"]
 
+        # get new data
+        count = 0
+        audit_daily_score = []
+        daily_time_series = []
+        for audit in audit_dict_list:
+            if audit["agent_name"] == agent:
+                # get stuff
+                daily_score = float(audit["scores"]["score_percentage"])
+                count += 1  # todo check to see if this works as intended
+                audit_daily_score.append(daily_score)
+        daily_score = sum(audit_daily_score)
+        new_count = historical_inspection_count + count
+        new_score = ((historical_score * historical_inspection_count) + daily_score) / new_count
 
+        # time_series
 
+        historical_time_series[0].append(daily_score / count)
+        historical_time_series[1].append(count)
+        print(daily_score / count)
+        print(count)
+        print(historical_time_series)
 
+        agent_dict = {"agent_name": agent, "avg_score": f"{new_score:.4f}", "total_inspection_count": new_count,
+                      "time_series": historical_time_series}
+
+        print(agent_dict)
+        agent_dict_list.append(agent_dict)
+    return agent_dict_list
 
     # """"""
     #
@@ -197,14 +229,14 @@ def daily_agent_transform(agent_list, db_retrieve_col):
     # # TODO hello todo my old friend... make an array that contains the jsons i want to submit rahter than this bullshit
 
 
-def write_to_db(db_audits_col, db_agents_col, audit_list):
+def write_to_db(db_audits_col, db_agents_col, audit_dict_list, agent_dict_list):
     """Takes list of audits and puts them into database"""
 
-    # for audit in audit_list:
+    # for audit in audit_dict_list:
     #     dbEntry = audit
     #     db_audits_col.insert_one(dbEntry)
     #
-    # for agent in agent_list:
+    # for agent in agent_dict_list:
     #     dbEntry = agent
     #     db_agents_col.insert_one(dbEntry)
 
