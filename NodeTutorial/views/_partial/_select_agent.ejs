@@ -19,8 +19,9 @@
     <div class="col-md-4">
         <h1>My Inspections</h1>
             <ul class="list-group">
+                <a onclick="toggleText('all_agents')" class="list-group-item">All Agents</a>
                 <% agents.forEach(function(agent) { %> <!-- loop through every inspection passed through-->
-                <a onclick="toggleText('<%= agent.agent_name %>')" class="list-group-item"><%= agent.agent_name %></a>
+                <a href="../inspections/<%= agent.agent_name %>" class="list-group-item"><%= agent.agent_name %></a>
                 <% }) %>
             </ul>
     <!-- inspection.header_items.forEach(function(header_item) {}
