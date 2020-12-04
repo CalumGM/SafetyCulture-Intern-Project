@@ -39,9 +39,9 @@ def reformat_audits(db_retrieve_col):
         score = str(audit["audit_data"]["score"])
         total_score = str(audit["audit_data"]["total_score"])
         score_percentage = str(audit["audit_data"]["score_percentage"])
-        datetime2 = datetime.datetime.strptime(audit["header_items"][1]["responses"]["datetime"],
-                                               "%Y-%m-%dT%H:%I:%S.%fZ")
-        date = datetime2.strftime("%d/%m/%Y")
+        datetime_var = datetime.datetime.strptime(audit["header_items"][1]["responses"]["datetime"],
+                                                  "%Y-%m-%dT%H:%I:%S.%fZ")
+        date = datetime_var.strftime("%d/%m/%Y")
         agent_name = audit["header_items"][2]["responses"]["text"]
         agent_list.append(agent_name)
         address_lat_long = str(audit["header_items"][3]["responses"]["location_text"]).split("\n")
@@ -75,28 +75,38 @@ def agent_create_thing(agent_list, db_retrieve_col):
     # This ends up creating a list similar to the previous function (new_audit_dict). Goal is to create list with an
     #   agent and an array/dict of his scores with dates.
     for agent in unique_agent_list:
-        # TODO create key for dict here
-        # agent_dict[f"{agent}"] = ""
         temp_audit_list = []
         for audit in db_retrieve_col.find({"header_items.responses.text": f"{agent}"},
                                           {"_id": 0, "audit_data.score": 1, "audit_data.total_score": 1,
                                            "audit_data.score_percentage": 1, "header_items.responses.datetime": 1}):
             # TODO format find and place into list
             score = audit["audit_data"]["score"]
+            total_score = audit["audit_data"]["score"]
+            score_percentage = audit["audit_data"]["score"]
+            datetime_var = datetime.datetime.strptime(audit["header_items"][1]["responses"]["datetime"],
+                                                      "%Y-%m-%dT%H:%I:%S.%fZ")
+            date = datetime_var.strftime("%d/%m/%Y")
 
-            temp_audit_list.append(audit)
-        agent_dict[f"{agent}"] = temp_audit_list
+            new_audit_dict = {"audit_id": audit["audit_id"], "date": date,
+                              "scores": {"score": score, "total_score": total_score,
+                                         "score_percentage": score_percentage}}
+            temp_audit_list.append(new_audit_dict)
+        agent_dict[f"{agent}"] = temp_audit_list  # list of agents with their audits
 
-            # in this step, create a list of audits from a certain agent
+        # {agent_name: "", avg_score: "", total_inspection_count: "", time_series: [[],[]]}
+        # TODO need to .split the dictionary so i can write each agent as a single document
 
-            # can create a list with agent name and populate with audits NVM
+        # in this step, create a list of audits from a certain agent
 
-            # TODO Problem: i need a way to dynamically assign 'variables' that themselves are related to some amount of entries. The end point is a named array with date and score (tuples/dictionaries whatever) as its contents
+        # can create a list with agent name and populate with audits NVM
+
+        # TODO Problem: i need a way to dynamically assign 'variables' that themselves are related to some amount of entries. The end point is a named array with date and score (tuples/dictionaries whatever) as its contents
         # TODO array of 365 days that will have a score if an audit was done on that day
 
         # TODO Big point here, the 365 thing is based on number of audits, not score. score could be stored also but maybe not yet.
-    print(agent_dict)
 
+        # TODO just a thought... if an agent has a score on a day then an audit was performed, assuming one per day (can be more tho maybe)
+    print(agent_dict)
 
 
 def write_to_db(db_audits_col, db_agents_col, audit_list):
