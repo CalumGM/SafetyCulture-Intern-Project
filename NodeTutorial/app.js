@@ -13,26 +13,31 @@ var setUpPassport = require("./setuppassport");
 
 var app = express(); // app is an instance of express, used for routing
 mongoose.connect(params.DATABASECONNECTION, {useUnifiedTopology:true, useNewUrlParser:true, useCreateIndex:true});
-setUpPassport();
+var db = mongoose.connection;
+db.once('open', function () {
+    console.log('Connected to database');
+    setUpPassport();
 
-app.set("port", process.env.PORT || 3000);
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(cookieParser());
-app.use(session({
-    secret:"doemlfgddfsoi!gjdsf5684561dsf", // secret code thingo??
-    resave:false,
-    saveUninitialized:false
-}));
+    app.set("port", process.env.PORT || 3000);
+    app.set("views", path.join(__dirname, "views"));
+    app.set("view engine", "ejs");
+    app.use(bodyParser.urlencoded({extended:false}));
+    app.use(cookieParser());
+    app.use(session({
+        secret:"doemlfgddfsoi!gjdsf5684561dsf", // secret code thingo??
+        resave:false,
+        saveUninitialized:false
+    }));
 
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(flash());
 
-app.use("/", require("./routes/web"));
-app.use("/api", require("./routes/api"));
+    app.use("/", require("./routes/web"));
+    app.use("/api", require("./routes/api"));
 
-app.listen(app.get("port"), function(){ // start localhost
-    console.log("Server started on port " + app.get("port"));
-})
+    app.listen(app.get("port"), function(){ // start localhost
+        console.log("Server started on port " + app.get("port"));
+    });
+});
+

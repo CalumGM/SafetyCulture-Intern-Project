@@ -1,11 +1,14 @@
 <%- include('../_partial/_header'); -%>
 
 <%- include('../_partial/_select_agent'); -%>
-<div class="col-md-6">
-    <h1>Inspections completed by <%= audits[0].agent_name %></h1>
-    <% audits.forEach(function(audit) { %>
-    <h4><%= audit.location['address'] %></h4>
-    <% }) %>
+
+<script>
+    
+</script>
+<div class="col">
+    <h1>Inspections completed by <%= agent_data['agent_name'] %></h1>
+    <h4># Inspections: <%= agent_data['number_of_inspections']%></h4>
+    <h4>Average Score: <%= agent_data['average_score']%></h4>
 </div>
 </div> <!-- ends the row div, place columns above this-->
 
