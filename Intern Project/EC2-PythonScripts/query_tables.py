@@ -76,7 +76,7 @@ def reformat_audits(db_retrieve_col):
         score_percentage = str(audit["audit_data"]["score_percentage"])
         datetime_var = datetime.datetime.strptime(audit["header_items"][1]["responses"]["datetime"],
                                                   "%Y-%m-%dT%H:%I:%S.%fZ")
-        date = datetime_var.strftime("%d/%m/%Y")
+        date = datetime_var.date()
         agent_name = audit["header_items"][2]["responses"]["text"]
         agent_list.append(agent_name)
         address_lat_long = str(audit["header_items"][3]["responses"]["location_text"]).split("\n")
