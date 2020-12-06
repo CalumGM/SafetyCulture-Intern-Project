@@ -107,23 +107,6 @@
     alignmentChartData = {
                 labels: [<%- "'"+ agent_names.join("','") + "'" %>],
                 datasets: [{
-                    // <% 
-                    // agent_scores = {}
-                    // data_labels = []
-                    // total_score
-                    // total_count
-                    // for inspection in inspections
-                    //      if inspection.agent in agent_scores.keys():
-                    //          agent_scores['agent'] = agent_scores['agent'][0]+1,agent_scores['agent'][1]+inspection.percentage_score
-                    //      else:
-                    //          agent_scores['agent'] = 1,agent_scores['agent'][1]+inspection.percentage_score
-                    //      total_score += inspection.percentage_score
-                    //      total_count += 1
-                    // team_avg = total_score/total_count
-                    // for agent in agent_scores
-                    //      data_labels.append(agent)
-                    //      data.append((agent_score['agent'][1]/agent_score['agent'][0])-team_avg)
-                    // %>
                     label: 'Relative Performance',
                     data: [<%=agent_rel_scores %>],
                     backgroundColor: [
