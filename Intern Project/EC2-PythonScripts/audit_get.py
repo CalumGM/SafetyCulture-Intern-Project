@@ -26,7 +26,7 @@ def main():
     authenticate()
     db_client, db_col = db_connect()
     x = int(db_col.estimated_document_count())
-    if x > 0:  # if db has documents
+    if x > 0:  # if db has documents, TODO wont work if only connected to staging - unless staging erase happens after this if statement
         # execute code that adds all new audits
         url = get_datetime()
     else:

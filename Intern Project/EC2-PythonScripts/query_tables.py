@@ -13,8 +13,8 @@ def main():
     # DOTO LIST:
     # TODO replace unique name list with a set (automatically scans for unique) in reformat_audits
     # TODO create list for agent dictionaries to be written to (in preperation for writing to db)
-    #
-    #
+    # TODO do i need to update the other agents for the time series? if they have no audits that would be a zero right?
+    # TODO pull all agents from agents db and if agent not in unqiue_agent_list: add a 0 to time-series with update
     db_client, db_retrieve_col, db_audits_col, db_agents_col = db_connect()  # setup collections for other functions to use
     audit_dict_list, unique_agent_list = reformat_audits(db_retrieve_col=db_retrieve_col)
 
@@ -78,7 +78,7 @@ def reformat_audits(db_retrieve_col):
                                                   "%Y-%m-%dT%H:%I:%S.%fZ")
         date = datetime_var.strftime("%d/%m/%Y")
         agent_name = audit["header_items"][2]["responses"]["text"]
-        agent_list.append(agent_name)  # TODO make into a set so that it will only append unique names. Can take out identify_unique_agents() as a result
+        agent_list.append(agent_name)
         address_lat_long = str(audit["header_items"][3]["responses"]["location_text"]).split("\n")
         address = address_lat_long[0]
         lat_long = address_lat_long[1].split(",")
