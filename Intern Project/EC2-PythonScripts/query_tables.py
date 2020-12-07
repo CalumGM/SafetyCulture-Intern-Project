@@ -16,9 +16,8 @@ def main():
     #
     #
     db_client, db_retrieve_col, db_audits_col, db_agents_col = db_connect()  # setup collections for other functions to use
-    audit_dict_list, agent_list = reformat_audits(db_retrieve_col=db_retrieve_col)
+    audit_dict_list, unique_agent_list = reformat_audits(db_retrieve_col=db_retrieve_col)
 
-    # unique_agent_list = identify_unique_agents(agent_list)
     unique_agent_list = ["Donald Glover", "Calum Hawaii", "Chris Ornott"]
 
     agent_pull = emulate_agent_db()  # emulates the db for code construction purposes
@@ -52,21 +51,6 @@ def emulate_agent_db():
     return agent_pull
 
 
-def identify_unique_agents(agent_list):
-    # make unique_agents another function
-    unique_agent_list = []
-    # get unique agents
-    set1 = set(agent_list)
-    unique_list = (list(set1))
-    for x in unique_list:
-        unique_agent_list.append(x)
-
-    # for each agent, retrieve all audits from them
-    print(unique_agent_list)
-
-    return unique_agent_list
-
-
 def db_connect():
     """Connect to the mongodb cloud"""
     db_client = pymongo.MongoClient(DATABASE_URL)
@@ -94,8 +78,7 @@ def reformat_audits(db_retrieve_col):
                                                   "%Y-%m-%dT%H:%I:%S.%fZ")
         date = datetime_var.strftime("%d/%m/%Y")
         agent_name = audit["header_items"][2]["responses"]["text"]
-        agent_list.append(
-            agent_name)  # TODO make into a set so that it will only append unique names. Can take out identify_unique_agents() as a result
+        agent_list.append(agent_name)  # TODO make into a set so that it will only append unique names. Can take out identify_unique_agents() as a result
         address_lat_long = str(audit["header_items"][3]["responses"]["location_text"]).split("\n")
         address = address_lat_long[0]
         lat_long = address_lat_long[1].split(",")
@@ -108,7 +91,11 @@ def reformat_audits(db_retrieve_col):
                           "location": {"text": address, "lat": lat, "long": long}}
         audit_dict_list.append(new_audit_dict)
 
-    return audit_dict_list, agent_list
+    # get only unique agents
+    set1 = set(agent_list)
+    unique_agent_list = (list(set1))
+
+    return audit_dict_list, unique_agent_list
 
 
 # TODO two functions. one for once off and other for daily. first below is now daily
