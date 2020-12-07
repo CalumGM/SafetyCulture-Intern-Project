@@ -12,9 +12,10 @@ def main():
     """main bruh"""
     # DOTO LIST:
     # TODO replace unique name list with a set (automatically scans for unique) in reformat_audits
-    # TODO create list for agent dictionaries to be written to (in preperation for writing to db)
+    # TODO create list for agent dictionaries to be written to (in preparation for writing to db)
     # TODO do i need to update the other agents for the time series? if they have no audits that would be a zero right?
-    # TODO pull all agents from agents db and if agent not in unqiue_agent_list: add a 0 to time-series with update
+    # TODO pull all agents from agents db and if agent not in unique_agent_list: add a 0 to time-series with update
+    # TODO see if write function can write a list into the db (to avoid a for loop in code)
     db_client, db_retrieve_col, db_audits_col, db_agents_col = db_connect()  # setup collections for other functions to use
     audit_dict_list, unique_agent_list = reformat_audits(db_retrieve_col=db_retrieve_col)
 
@@ -55,7 +56,7 @@ def db_connect():
     """Connect to the mongodb cloud"""
     db_client = pymongo.MongoClient(DATABASE_URL)
     db_name = db_client['RealEstateData']
-    db_retrieve_col = db_name['inspections']  # inspections collection
+    db_retrieve_col = db_name['inspections']  # inspections collection, staging db
     db_audits_col = db_name['audits']  # audits collection
     db_agents_col = db_name['agents']  # agents collection
     return db_client, db_retrieve_col, db_audits_col, db_agents_col
