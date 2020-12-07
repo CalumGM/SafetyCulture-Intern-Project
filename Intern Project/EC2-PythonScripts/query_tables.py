@@ -13,40 +13,13 @@ def main():
     # DOTO LIST:
     db_client, db_retrieve_col, db_audits_col, db_agents_col = db_connect()  # setup collections for other functions to use
     audit_dict_list, unique_agents = reformat_audits(db_retrieve_col=db_retrieve_col)
+    agent_dict_list = agent_transform(unique_agents=unique_agents, audit_dict_list=audit_dict_list, db_agents_col=db_agents_col)
 
-    unique_agents = ["Donald Glover", "Calum Hawaii", "Chris Ornott"]
-
-    agent_pull = emulate_agent_db()  # emulates the db for code construction purposes
-
-    agent_dict_list = daily_agent_transform(unique_agents=unique_agents, db_emulation=agent_pull,
-                                            audit_dict_list=audit_dict_list, db_agents_col=db_agents_col)
     # pull all agents for processing in write_to_db()
     all_agents = db_retrieve_col.find({}, {"_id": 0, "agent_name": 1})
 
-    # write_to_db(db_audits_col=db_audits_col, db_agents_col=db_agents_col, audit_dict_list=audit_dict_list, agent_dict_list=agent_dict_list, all_agents=all_agents, unique_agents=unique_agents)
+    write_to_db(db_audits_col=db_audits_col, db_agents_col=db_agents_col, audit_dict_list=audit_dict_list, agent_dict_list=agent_dict_list, all_agents=all_agents, unique_agents=unique_agents)
     db_client.close()
-
-
-def emulate_agent_db():
-    # emulation of db pull for daily_agent_transform
-    agent_pull = [
-        {"agent_name": "Donald Glover", "avg_score": "94.444", "total_inspection_count": "2", "time_series": [[], []]},
-        {"agent_name": "Calum Hawaii", "avg_score": "83.5495", "total_inspection_count": "3", "time_series": [[], []]},
-        {"agent_name": "Chris Ornott", "avg_score": "86.26875", "total_inspection_count": "5", "time_series": [[], []]}]
-    # TODO WARNING: Total_inspection_count will not equal actual time_series array
-    # TODO WARNING: There is no corrolation between the paralell arrays. You could submit no audits but get a percent score (logic error)
-
-    time_series_score = []  # measured in percentages
-    time_series_inspection_count = []  # simple count of inspections done per day
-
-    for agent in agent_pull:
-        for x in range(0, 5):
-            time_series_score.append(round(random.uniform(75, 100), 4))
-            time_series_inspection_count.append(random.randint(0, 7))
-        agent["time_series"][0] = time_series_score
-        agent["time_series"][1] = time_series_inspection_count
-
-    return agent_pull
 
 
 def db_connect():
@@ -100,21 +73,23 @@ def reformat_audits(db_retrieve_col):
 
 
 # TODO two functions. one for once off and other for daily. first below is now daily
-def daily_agent_transform(unique_agents, db_emulation, audit_dict_list, db_agents_col):
+def agent_transform(unique_agents, audit_dict_list, db_agents_col):
     """create the dictionaries that will update/insert in the agents collection"""
-    # TODO: will need a way to store info for writing to db
     agent_dict_list = []
     for agent in unique_agents:
-        # get old scores
-        historical_score = float(db_emulation[0]["avg_score"])
-        historical_inspection_count = int(db_emulation[0]["total_inspection_count"])
-        time_series = db_emulation[0]["time_series"]
-
         # query that uses agent name to retrieve that agent's document
-        # historical_agent = db_agents_col.find_one({"agent_name": agent}, {"_id": 0, "avg_score": 1, "total_inspection_count": 1, "time_series": 1})
-        # historical_score = float(historical_agent["avg_score"])
-        # historical_inspection_count = int(historical_agent["total_inspection_count"])
-        # time_series = historical_agent["time_series"]
+
+        historical_agent = db_agents_col.find_one({"agent_name": agent}, {"_id": 0, "avg_score": 1, "total_inspection_count": 1, "time_series": 1})
+
+        # if agents collection is empty, set default values to prevent exception
+        if historical_agent is None:
+            historical_score = 0.0000
+            historical_inspection_count = 0
+            time_series = [[], []]
+        else:
+            historical_score = float(historical_agent["avg_score"])
+            historical_inspection_count = int(historical_agent["total_inspection_count"])
+            time_series = historical_agent["time_series"]
 
         # get new data
         count = 0
@@ -140,22 +115,12 @@ def daily_agent_transform(unique_agents, db_emulation, audit_dict_list, db_agent
 
 
 def write_to_db(db_audits_col, db_agents_col, audit_dict_list, agent_dict_list, all_agents, unique_agents):
-    """Takes list of audits and puts them into database"""
-    # x=0
-    # for audit in audit_dict_list:
-    #     if x==1:
-    #         break
-    #     x+=1
-    #     dbEntry = audit
-    #     db_audits_col.insert_one(dbEntry)
+    """Takes lists of audits and agents and correctly places them into database"""
+    # insert new audits
+    db_audits_col.insert_many(audit_dict_list)
 
-    db_audits_col.insert_many(audit_dict_list)  # use this one
-
-    # three conditions:
-    # agent exists and has an audit
-    # agent exists and has no audit
-    # agent does not exist and has an audit (add agent to db)
-    for agent in unique_agents:  # must see if i can condense later
+    # check condition for agent and take appropriate action
+    for agent in unique_agents:
         if agent in all_agents:
             # agent exists and has a new audit
             db_agents_col.update({"agent_name": agent}, {"avg_score": agent_dict_list["avg_score"], "total_inspection_count": agent_dict_list["total_inspection_count"], "time_series": agent_dict_list["time_series"]})
@@ -170,6 +135,7 @@ def write_to_db(db_audits_col, db_agents_col, audit_dict_list, agent_dict_list, 
             time_series = db_agents_col.find({"agent_name": agent}, {"time_series": 1})
             time_series[0].append(0.0000)
             time_series[1].append(0)
+            db_agents_col.update({"agent_name": agent}, time_series)
 
 
 main()
