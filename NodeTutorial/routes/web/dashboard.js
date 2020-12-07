@@ -77,8 +77,8 @@ router.get("/", function(req, res){ // implicit /post before each of these route
                 daily_audit_data.push(parseFloat(daily_audit_count[key]));
             }
         };
-        console.log(daily_audit_data)
-        console.log(day_labels)
+        console.log(daily_audit_data);
+        console.log(day_labels);
 
         res.render(
             "dashboard/dashboard", 
