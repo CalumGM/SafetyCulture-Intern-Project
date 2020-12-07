@@ -18,7 +18,7 @@ router.use(ensureAuthenticated);// ensures that all routes in this route are now
 router.get("/", function(req, res){ // implicit /post before each of these routes
     AuditModel.find({}).exec(function(err, audits) { // find in database
         if(err){console.log(err);}
-        console.log('Dashboard Accessed');
+
         var agent_data = {}
         var agent_scores = {}
         var agent_audit_totals = [];
@@ -74,8 +74,6 @@ router.get("/", function(req, res){ // implicit /post before each of these route
                 daily_audit_data.push(parseFloat(daily_audit_count[key]));
             }
         };
-        console.log('daily audit data', daily_audit_data);
-        console.log('day labels', day_labels);
 
         res.render(
             "dashboard/dashboard", 
