@@ -11,10 +11,7 @@ DATABASE_URL = "mongodb+srv://calum_maitland:InternDatabase@cluster0.qg16e.mongo
 def main():
     """main bruh"""
     # DOTO LIST:
-    # TODO create list for agent dictionaries to be written to (in preparation for writing to db)
-    # TODO do i need to update the other agents for the time series? if they have no audits that would be a zero right?
     # TODO pull all agents from agents db and if agent not in unique_agents: add a 0 to time-series with update
-    # TODO see if write function can write a list into the db (to avoid a for loop in code)
     # TODO code will not account for a new agent joining on a date (that agent will have smaller array: needs processing)
     db_client, db_retrieve_col, db_audits_col, db_agents_col = db_connect()  # setup collections for other functions to use
     audit_dict_list, unique_agents = reformat_audits(db_retrieve_col=db_retrieve_col)
@@ -123,7 +120,6 @@ def daily_agent_transform(unique_agents, db_emulation, audit_dict_list):
         # get new data
         count = 0
         audit_daily_score = []
-        daily_time_series = []
         for audit in audit_dict_list:
             if audit["agent_name"] == agent:
                 # get stuff
