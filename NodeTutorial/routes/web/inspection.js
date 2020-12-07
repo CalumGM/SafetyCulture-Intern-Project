@@ -7,6 +7,7 @@ var Agent = require("../../models/agents");
 var router = express.Router();
 router.use(ensureAuthenticated);// ensures that all routes in this route are now authenticated
 var found_agents;
+var agent;
 // how do I talk to the routes in this page??
 router.get("/", function(req, res){ // implicit /post before each of these routes
     Agent.find({}).exec(function(err, agents){ // find all agents in database
@@ -22,15 +23,25 @@ router.get("/:agent_name", function(req,res){ // :postID represents a variable p
     });
     Audit.find({agent_name:req.params.agent_name}).exec(function(err, audits){ // find all audits done by a particular agent
         if(err){console.log(err);}
-        // do all calcs in here???
+        // do all calcs in here. Yes, because backend does all the heavy lifting
         var agent_data = {};
         var audits_data = {};
-        agent_data['average_score'] = calculateAverageScore(audits);
+        var i;
+        //console.log('agents', found_agents) 
+        for (i=0; i<found_agents.length; i++){
+            if (found_agents[i].agent_name === req.params.agent_name){
+                agent = found_agents[i];
+            }
+        };
+        
+        if (!agent.avg_score){ // treating the data as dirty when we know it is clean
+            agent_data['avg_score'] = calculateAverageScore(audits);
+            // push new calculated average (not gonna do) 
+        } else{
+            agent_data['avg_score'] = agent.avg_score;
+        };
         agent_data['number_of_inspections'] = audits.length;
         agent_data['agent_name'] = audits[0].agent_name;
-        // while (!found_agents){
-        //     console.log('waiting');
-        // };
         res.render("inspections/view",{audits:audits, agent_data:agent_data, agents:found_agents});
     });
 });

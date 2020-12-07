@@ -11,7 +11,7 @@ router.use(ensureAuthenticated);// ensures that all routes in this route are now
 // how do I talk to the routes in this page??
 router.get("/", function(req, res){ // implicit /post before each of these routes
     AuditModel.find({}).exec(function(err, audits){ // find in database
-        AuditModel.find({}).exec(function(err, agents){ // find in database
+        AgentModel.find({}).exec(function(err, agents){ // find in database
             if(err){console.log(err);}
             console.log('Dashboard Accessed');
             var agent_data = {}
