@@ -14,14 +14,15 @@
         view_inspection.style.display = "block";
     }
 </script>
-
-<div class="row">
+<div class="row" style="padding-left:20px"> 
+    <h1>Agents</h1>
+</div>
+<div class="row" style="margin-top: -10px;" > <!-- up offset for row-->
     <div class="col-md-3">
-        <h1>My Inspections</h1>
-            <ul class="list-group">
-                <a onclick="toggleText('all_agents')" class="list-group-item">All Agents</a>
+            <ul class="list-group" style="margin-top: 10px;"> <!-- down offset for LHS -->
+                <a onclick="toggleText('all_agents')" class="list-group-item disabled">All Agents</a>
                 <% agents.forEach(function(agent) { %> <!-- loop through every inspection passed through-->
-                <a href="../inspections/<%= agent.agent_name %>" class="list-group-item"><%= agent.agent_name %></a>
+                <a href="../inspections/<%= agent.agent_name %>" class="list-group-item list-group-item-action"><%= agent.agent_name %></a>
                 <% }) %>
             </ul>
     <!-- inspection.header_items.forEach(function(header_item) {}
