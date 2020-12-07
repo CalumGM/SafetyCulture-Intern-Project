@@ -21,7 +21,7 @@ def main():
     agent_pull = emulate_agent_db()  # emulates the db for code construction purposes
 
     agent_dict_list = daily_agent_transform(unique_agents=unique_agents, db_emulation=agent_pull,
-                                            audit_dict_list=audit_dict_list)  # WIP function
+                                            audit_dict_list=audit_dict_list, db_agents_col=db_agents_col)  # WIP function
     # pull all agents
     all_agents = db_retrieve_col.find({}, {"_id": 0, "agent_name": 1})
     # need code that will determine if agent is in db, update if he is else take dictionary created in code and insert
@@ -105,7 +105,7 @@ def reformat_audits(db_retrieve_col):
 
 
 # TODO two functions. one for once off and other for daily. first below is now daily
-def daily_agent_transform(unique_agents, db_emulation, audit_dict_list):
+def daily_agent_transform(unique_agents, db_emulation, audit_dict_list, db_agents_col):
     """create the dictionaries that will update/insert in the agents collection"""
     # TODO: will need a way to store info for writing to db
     agent_dict_list = []
@@ -116,6 +116,12 @@ def daily_agent_transform(unique_agents, db_emulation, audit_dict_list):
         historical_score = float(db_emulation[0]["avg_score"])
         historical_inspection_count = int(db_emulation[0]["total_inspection_count"])
         time_series = db_emulation[0]["time_series"]
+
+        # query that uses agent name to retrieve that agent's document
+        # historical_agent = db_agents_col.find_one({"agent_name": agent}, {"_id": 0, "avg_score": 1, "total_inspection_count": 1, "time_series": 1})
+        # historical_score = float(historical_agent["avg_score"])
+        # historical_inspection_count = int(historical_agent["total_inspection_count"])
+        # time_series = historical_agent["time_series"]
 
         # get new data
         count = 0
