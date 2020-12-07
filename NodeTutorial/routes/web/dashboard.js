@@ -1,9 +1,7 @@
 var express = require("express");
 var passport = require("passport");
 var ensureAuthenticated = require("../../auth/auth").ensureAuthenticated;
-var AuditModel = require("../../models/audits");
-var AgentModel = require("../../models/agents");
-const Agent = require("../../models/agents");
+var AuditModel = require("../../models/audits");;
 
 function sum(obj) {
     var sum = 0;
@@ -32,6 +30,7 @@ router.get("/", function(req, res){ // implicit /post before each of these route
         var daily_audit_count = {};
         var day_labels = []
         var daily_audits = []
+        var daily_audit_data = []
 
         audits.forEach(audit => {
             if (audit.agent_name in agent_data) {
@@ -45,10 +44,8 @@ router.get("/", function(req, res){ // implicit /post before each of these route
             } else {
                 agent_scores[audit.agent_name] = parseFloat(audit.score.percentage_score);
             };
-            date_string = audit.date.toISOString().substring(0,10)
-
-            console.log(date_string)
-            console.log(daily_audit_count[date_string])
+            date_string = audit.date.getFullYear() +'-'+ audit.date.getMonth() +'-'+ audit.date.getDate()
+            // date_string = audit.date.;
             if (date_string in daily_audit_count) {
                 daily_audit_count[date_string] += 1;
             } else {
@@ -56,7 +53,7 @@ router.get("/", function(req, res){ // implicit /post before each of these route
                 day_labels.push(date_string)
             };
         });
-
+        console.log('1')
         for (var key in agent_data) {
             if (agent_data.hasOwnProperty(key)) {
                 agent_audit_totals.push(parseFloat(agent_data[key]));
@@ -68,27 +65,24 @@ router.get("/", function(req, res){ // implicit /post before each of these route
                 agent_score_totals.push(parseFloat(agent_scores[key]));
             }
         };
-
-        for (var key in daily_audit_count) {
-            if (daily_audit_count.hasOwnProperty(key)) {
-                daily_audits.push(parseFloat(daily_audit_count[key]));
-            }
-        };
-
         all_audit_count = sum(agent_audit_totals)
         all_audit_score = sum(agent_score_totals)
         all_avg_audit_score = all_audit_score/all_audit_count;
 
         for (i = 0; i < agent_names.length; i++) {
-            agent_scores.push((agent_score_totals[i]/agent_audit_totals[i] - all_avg_audit_score) / 100);
+            agent_scores.push((agent_score_totals[i] / agent_audit_totals[i] - all_avg_audit_score) / 100);
         }
-
-        console.log(day_labels);
-        console.log(daily_audits);
+        for (var key in daily_audit_count) {
+            if (daily_audit_count.hasOwnProperty(key)) {
+                daily_audit_data.push(parseFloat(daily_audit_count[key]));
+            }
+        };
+        console.log(daily_audit_data)
+        console.log(day_labels)
 
         res.render(
             "dashboard/dashboard", 
-            {audits: audits, agent_totals:agent_audit_totals, agent_names: agent_names, agent_rel_scores:agent_scores, day_labels: day_labels, daily_audit_count: daily_audits}
+            {audits: audits, agent_totals:agent_audit_totals, agent_names: agent_names, agent_rel_scores:agent_scores, day_labels: day_labels, daily_audit_count: daily_audit_data}
         );
     });
  });
