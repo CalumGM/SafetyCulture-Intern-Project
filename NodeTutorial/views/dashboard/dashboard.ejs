@@ -12,24 +12,19 @@
         <!-- <a href="/posts/view" type="button" class="btn btn-default">View Audits</a> -->
     </div>
 </div>
-<h3>Agents:</h3>
-
 <div class="col-sm-12 col-md-12">
     <div class="col-sm-12 col-md-6">
         <div class="agent_performance">
-            <h3>Agent performance</h3>
             <canvas id="agent_performance_chart"></canvas>
         </div>
     </div>
     <div class="col-sm-12 col-md-6">
         <div class="team_performance">
-            <h3>Team performance</h3>
             <canvas id="team_performance_chart"></canvas>
         </div>
     </div>
     <div class="col-sm-12 col-md-6">
         <div class="agent_alignment">
-            <h3>Agent Alignment</h3>
             <canvas id="agent_alignment_chart"></canvas>
         </div>
     </div>
@@ -40,7 +35,11 @@
     </div>
 
 </div>
-
+<div>
+    <br/>
+    <br/>
+    <br/>
+</div>
 <script> 
     // graph plotting using Chartjs
     var agentPerformanceJS = document.getElementById('agent_performance_chart').getContext('2d');
@@ -79,7 +78,7 @@
     agentPerformanceChartOptions = {
                 title:{
                     display:true,
-                    text:'Bar Chart',
+                    text:'Agent Overall Inspections',
                     fontSize: 25,
                     fontColor: '#000'
                 },
@@ -107,7 +106,7 @@
     alignmentChartData = {
                 labels: [<%- "'"+ agent_names.join("','") + "'" %>],
                 datasets: [{
-                    label: 'Relative Performance',
+                    label: 'Relative Property Score',
                     data: [<%=agent_rel_scores %>],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -131,7 +130,7 @@
     alignmentChartOptions = {
                 title:{
                     display:true,
-                    text:'Agent Alignment',
+                    text:'Agent Inpection Score Alignment',
                     fontSize: 25,
                     fontColor: '#000'
                 },
@@ -158,9 +157,9 @@
                 }
             };
     lineChartData = {
-                // labels: [<%=day_labels %>],
+                labels: [<%- "'"+ day_labels.join("','") + "'" %>],
                 datasets: [{
-                    label: '# of Votes',
+                    label: 'Relative Property Score',
                     data: [<%=daily_audit_count %>],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
@@ -184,8 +183,8 @@
     lineChartOptions = {
                 title:{
                     display:true,
-                    text:'Line Graph',
-                    fontSize: 25,
+                    text:'Team Daily Inspection Performance',
+                    fontSize: 26,
                     fontColor: '#000'
                 },
                 legend:{
@@ -201,11 +200,11 @@
                     }
                 },
                 scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
                 }
             };
     var agentPerformance = new Chart(agentPerformanceJS, {
@@ -224,6 +223,4 @@
         options:alignmentChartOptions
     });
 </script>
-
-
 <%- include ('../_partial/_footer'); -%>

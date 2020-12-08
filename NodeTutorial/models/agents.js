@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 
 var agentSchema = mongoose.Schema({
     agent_name: {type: String, required:true},
-    average_score: {type: Date, required:false},
+    avg_score: {type: String, required:false},
     time_series: {type:mongoose.Schema.Types.Array, required:false, unique:false},
 });
 

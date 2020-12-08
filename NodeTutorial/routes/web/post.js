@@ -44,7 +44,6 @@ router.get("/:postId", function(req,res){ // :postID represents a variable param
 });
 
 router.get("/edit/:postId", function(req,res){ // :postID represents a variable parameter as a route
-    console.log(req.params);
     Post.findById(req.params.postId).exec(function(err, post){
         res.render("post/editpost",{post:post});
     });
@@ -64,7 +63,6 @@ router.post("/update", async function(req, res){
         res.redirect("/posts/" + req.body.postid);  // go back to post page
 
     } catch (err) {
-        console.log("error happened");
         res.status(500).send(err);
     }
 //change

@@ -2,15 +2,95 @@
 
 <%- include('../_partial/_select_agent'); -%>
 
-<script>
-    
-</script>
-<div class="col">
-    <h1>Inspections completed by <%= agent_data['agent_name'] %></h1>
-    <h4># Inspections: <%= agent_data['number_of_inspections']%></h4>
-    <h4>Average Score: <%= agent_data['average_score']%></h4>
+
+<div class="col-md-9"> <!-- RHS column -->
+    <!--<h1>Inspections completed by <%= agent_data['agent_name'] %></h1>-->
+    <div class="row"> <!-- top row -->
+        <h4># Inspections: <%= agent_data['number_of_inspections']%></h4>
+        <h4>Average Score: <%= agent_data['avg_score']%></h4>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="agentCanvas"></canvas>
+        </div>
+
+        <div class="col-md-6">
+        </div>
+    </div>
+
 </div>
 </div> <!-- ends the row div, place columns above this-->
 
+<script> // graph plotting using Chartjs
+    // Global Options
+    var agentCanvasjs = document.getElementById('agentCanvas').getContext('2d');
+
+    Chart.defaults.global.defaultFontFamily.Chart = 'Lato';
+    Chart.defaults.global.defaultFontSize.Chart = 18;
+    Chart.defaults.global.defaultFontColor.Chart = '#000';
+    Chart.defaults.global.hover.mode = 'nearest';
+    var timeFormat = 'DD/MM/YYYY';
+    barChartData = {
+                labels: [<%- "'"+ agent_data['day_labels'].join("','") + "'" %>],
+                datasets: [{
+                label: '# of Votes',
+                data: [<%=agent_data['daily_audit_data'] %>],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)','rgba(54, 162, 235, 0.2)','rgba(255, 206, 86, 0.2)','rgba(75, 192, 192, 0.2)','rgba(153, 102, 255, 0.2)','rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)','rgba(54, 162, 235, 1)','rgba(255, 206, 86, 1)','rgba(75, 192, 192, 1)','rgba(153, 102, 255, 1)','rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+                }]
+            };
+    barChartOptions = {
+                title:{
+                    display:true,
+                    text:'Bar Chart',
+                    fontSize: 25,
+                    fontColor: '#000'
+                },
+                legend:{
+                    display: false, // set to true to show the legend
+                    position:'right',
+                    labels:{
+                        fontColor: '#000'
+                    }
+                },
+                layout:{
+                    padding:{
+                        left:0, right:0, bottom:0, top:0
+                    }
+                },
+                scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Number of Inspections'
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    }
+                }]
+                }
+
+            };
+
+    var agentChart = new Chart(agentCanvasjs, {
+        type:'bar', // bar, horizontal, pie, line, doughnut, radar, polarArea
+        data:barChartData,
+        options:barChartOptions
+    });
+</script>
 
 <%- include ('../_partial/_footer'); -%>
