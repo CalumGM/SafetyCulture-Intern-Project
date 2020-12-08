@@ -26,13 +26,12 @@ def main():
     authenticate()
     db_client, db_col = db_connect()
     x = int(db_col.estimated_document_count())
-    if x > 0:  # if db has documents, TODO wont work if only connected to staging - unless staging erase happens after this if statement
+    if x > 0:  # if db has documents
         # execute code that adds all new audits
         url = get_datetime()
     else:
         # execute code that adds all audits
         url = TEMPLATE_SEARCH_URL
-    # erase temp_inspections collection
     db_col.drop()  # erase collection so that next script doesnt get confused, poor baby
     audit_list = retrieve_audit_ids(url)
     retrieve_audit_data(audit_list)
@@ -54,9 +53,13 @@ def authenticate():
 def retrieve_audit_ids(url):
     """Use a pre-determined template_id to find any audits made from that template"""
     print("Getting template...")
-    template_search = requests.get(url, headers=headers)
-    audit_list = template_search.json()
-    audit_list = audit_list['audits']
+    template_search = requests.get(url, headers=headers).json()
+    audit_list = template_search["audits"]
+    if template_search["total"] >= 1001:  # greater than 1000
+        for i in range(round(float(template_search["total"])/1000)-1):  # accounts for first request
+            last_date = audit_list[-1]["modified_at"]
+            template_search = requests.get(f"https://sandpit-api.safetyculture.io/audits/search?order=asc&template={TEMPLATE_ID}&modified_after={last_date}&archived=false&completed=both&owner=all&limit=1000 ", headers=headers).json()
+            audit_list += template_search["audits"]
     print("...Received")
     return audit_list
 
@@ -69,7 +72,6 @@ def retrieve_audit_data(audit_list):
         response = requests.get(audit_url, headers=headers)
         response_json = response.json()
         audit_data_list.append(response_json)
-        print(len(audit_list))
         print(str(((x[0]+1)/len(audit_list))*100) + "% - estimated")  # glorified 'loading bar'
 
 
@@ -78,7 +80,7 @@ def get_datetime():
     d1 = datetime.datetime.today()
     day = d1 - datetime.timedelta(days=1)
     audit_date = day.strftime("%Y-%m-%dT%H:%I:%S.%fZ")  # API compatible time
-    template_search_url = f"https://sandpit-api.safetyculture.io/audits/search?order=asc&template={TEMPLATE_ID}&modified_after={audit_date}&archived=false&completed=both&owner=all&limit=1000 "
+    template_search_url = f"https://sandpit-api.safetyculture.io/audits/search?order=asc&template={TEMPLATE_ID}&modified_after={audit_date}&archived=false&completed=both&owner=all&limit=1000"
     return template_search_url
 
 
