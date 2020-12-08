@@ -32,6 +32,8 @@ def main():
     else:
         # execute code that adds all audits
         url = TEMPLATE_SEARCH_URL
+    # erase temp_inspections collection
+    db_col.drop()  # erase collection so that next script doesnt get confused, poor baby
     audit_list = retrieve_audit_ids(url)
     retrieve_audit_data(audit_list)
     write_to_db(db_col)
@@ -40,18 +42,22 @@ def main():
 
 def authenticate():
     """Authenticate user credentials and create header for API requests"""
+    print("Authenticating...")
     auth_response = requests.post(AUTH_URL, data=auth_data)
     auth_json = auth_response.json()
     # format access token
     access_token = auth_json['token_type'] + ' ' + auth_json['access_token']
     headers['Authorization'] = access_token
+    print("...Authenticated")
 
 
 def retrieve_audit_ids(url):
     """Use a pre-determined template_id to find any audits made from that template"""
+    print("Getting template...")
     template_search = requests.get(url, headers=headers)
     audit_list = template_search.json()
     audit_list = audit_list['audits']
+    print("...Received")
     return audit_list
 
 
@@ -63,7 +69,8 @@ def retrieve_audit_data(audit_list):
         response = requests.get(audit_url, headers=headers)
         response_json = response.json()
         audit_data_list.append(response_json)
-        print(str((x[0]+1)/len(audit_list)) + "% - estimated")  # glorified 'loading bar'
+        print(len(audit_list))
+        print(str(((x[0]+1)/len(audit_list))*100) + "% - estimated")  # glorified 'loading bar'
 
 
 def get_datetime():
