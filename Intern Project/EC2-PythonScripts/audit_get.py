@@ -18,7 +18,6 @@ DATABASE_URL = "mongodb+srv://calum_maitland:InternDatabase@cluster0.qg16e.mongo
 
 auth_data = {'username': USER, 'password': PWD, 'grant_type': GRANT_TYPE}
 headers = {}
-audit_data_list = []
 
 
 def main():
@@ -26,6 +25,7 @@ def main():
     authenticate()
     db_client, db_col = db_connect()
     x = int(db_col.estimated_document_count())
+    # TODO if no new audits, then table is dropped and next day is populated with all audits
     if x > 0:  # if db has documents
         # execute code that adds all new audits
         url = get_datetime()
@@ -34,8 +34,8 @@ def main():
         url = TEMPLATE_SEARCH_URL
     db_col.drop()  # erase collection so that next script doesnt get confused, poor baby
     audit_list = retrieve_audit_ids(url)
-    retrieve_audit_data(audit_list)
-    write_to_db(db_col)
+    responses = retrieve_audit_data(audit_list)
+    # write_to_db(db_col, responses)
     close_db(db_client)
 
 
@@ -52,7 +52,7 @@ def authenticate():
 
 def retrieve_audit_ids(url):
     """Use a pre-determined template_id to find any audits made from that template"""
-    print("Getting template...")
+    print("Getting Template...")
     template_search = requests.get(url, headers=headers).json()
     audit_list = template_search["audits"]
     if template_search["total"] >= 1001:  # greater than 1000
@@ -60,13 +60,14 @@ def retrieve_audit_ids(url):
             last_date = audit_list[-1]["modified_at"]
             template_search = requests.get(f"https://sandpit-api.safetyculture.io/audits/search?order=asc&template={TEMPLATE_ID}&modified_after={last_date}&archived=false&completed=both&owner=all&limit=1000 ", headers=headers).json()
             audit_list += template_search["audits"]
-    print("...Received")
+    print("...Template Received")
     return audit_list
 
 
 def retrieve_audit_data(audit_list):
     """From audit_list, get all information from each audit"""
     print("Retrieving Audits...")
+    print(f"There are {len(audit_list)} Audits")
     batch_requests = []
     responses = []
     for x in enumerate(audit_list):  # can try to make a batch request
@@ -84,6 +85,13 @@ def retrieve_audit_data(audit_list):
     print("Requested Audits Length: " + str(len(responses)))
     print("Length of Audit List: " + str(len(audit_list)))
     print("...All Audits Retrieved")
+    for response in responses:
+        try:
+            if response["statusCode"]:
+                print("Error")
+        except KeyError:
+            pass
+    return responses
 
 
 def get_datetime():
@@ -103,11 +111,13 @@ def db_connect():
     return db_client, db_col
 
 
-def write_to_db(db_col):
+def write_to_db(db_col, responses):
     """Takes list of audits and puts them into database"""
-    for audit in audit_data_list:
+    print("Inserting into Database...")
+    for audit in responses:
         dbEntry = audit
         db_col.insert_one(dbEntry)
+    print("...Done")
 
 
 def close_db(db_client):
