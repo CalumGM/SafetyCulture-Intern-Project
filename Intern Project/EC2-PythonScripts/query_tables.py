@@ -7,11 +7,16 @@ import random
 DATABASE_URL = "mongodb+srv://calum_maitland:InternDatabase@cluster0.qg16e.mongodb.net/RealEstateData?retryWrites" \
                "=true&w=majority"
 
-
 def main():
     """main bruh"""
-    # DOTO LIST:
     db_client, db_retrieve_col, db_audits_col, db_agents_col = db_connect()  # setup collections for other functions to use
+    try:  # flag may exist in db. If present, exit.
+        if not db_retrieve_col.find_one()["audit"]:  # see if flag is in db
+            print("Flag Detected: Exiting...")
+            exit()
+    except KeyError:
+        print("No Flag: Continuing...")
+    print("Moving On")
     audit_dict_list, unique_agents = reformat_audits(db_retrieve_col=db_retrieve_col)
     agent_dict_list = agent_transform(unique_agents=unique_agents, audit_dict_list=audit_dict_list, db_agents_col=db_agents_col)
 
@@ -24,15 +29,17 @@ def main():
 
 def db_connect():
     """Connect to the mongodb cloud"""
+    print("Connecting to Database...")
     db_client = pymongo.MongoClient(DATABASE_URL)
     db_name = db_client['RealEstateData']
     db_retrieve_col = db_name['inspections']  # inspections collection, staging db
     db_audits_col = db_name['audits']  # audits collection
     db_agents_col = db_name['agents']  # agents collection
     # TODO change back from temp
-    # db_audits_col = db_name['audits_temp']  # audits collection
-    # db_agents_col = db_name['agents_temp']  # agents collection
+    db_audits_col = db_name['temp_audits']  # audits collection
+    db_agents_col = db_name['temp_agents']  # agents collection
     db_retrieve_col = db_name['temp_inspections']  # inspections collection, staging db
+    print("...Connected")
     return db_client, db_retrieve_col, db_audits_col, db_agents_col
 
 
@@ -46,6 +53,7 @@ def reformat_audits(db_retrieve_col):
                                            "header_items.responses.text": 1,
                                            "header_items.responses.location_text": 1}):
         # assign query results to variables
+        # print(audit)
         score = str(audit["audit_data"]["score"])
         total_score = str(audit["audit_data"]["total_score"])
         score_percentage = str(audit["audit_data"]["score_percentage"])

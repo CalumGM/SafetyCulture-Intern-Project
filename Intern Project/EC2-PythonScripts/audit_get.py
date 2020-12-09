@@ -31,10 +31,9 @@ def main():
     if x > 0:  # if db has documents
         # execute code that adds all new audits
         url = get_datetime()
-    else:
+    else:  # x == 0
         # execute code that adds all audits
         url = TEMPLATE_SEARCH_URL
-    db_col.drop()  # erase collection so that next script doesnt get confused, poor baby
     audit_list = retrieve_audit_ids(url)
     responses = retrieve_audit_data(audit_list)
     write_to_db(db_col, responses)
@@ -54,7 +53,7 @@ def authenticate():
 
 def retrieve_audit_ids(url):
     """Use a pre-determined template_id to find any audits made from that template"""
-    print("Getting Template...")
+    print("Looking for Audits Using the Template...")
     template_search = requests.get(url, headers=headers).json()
     audit_list = template_search["audits"]
     if template_search["total"] >= 1001:  # greater than 1000
@@ -62,12 +61,16 @@ def retrieve_audit_ids(url):
             last_date = audit_list[-1]["modified_at"]
             template_search = requests.get(f"https://sandpit-api.safetyculture.io/audits/search?order=asc&template={TEMPLATE_ID}&modified_after={last_date}&archived=false&completed=both&owner=all&limit=1000 ", headers=headers).json()
             audit_list += template_search["audits"]
-    print("...Template Received")
+    print("...Audit List Received")
     return audit_list
 
 
 def retrieve_audit_data(audit_list):
     """From audit_list, get all information from each audit"""
+    if len(audit_list) == 0:
+        print("List is Empty: No new Audits")
+        responses = no_new_audits()
+        return responses
     print("Retrieving Audits...")
     print(f"There are {len(audit_list)} Audits")
     batch_requests = []
@@ -118,6 +121,13 @@ def get_datetime():
     return template_search_url
 
 
+def no_new_audits():
+    """Create a flag to send to db to prevent script failure"""
+    flag_dict = {"audit": False}
+    flag = [flag_dict]
+    return flag
+
+
 def db_connect():
     """Connect to the mongodb cloud"""
     db_client = pymongo.MongoClient(DATABASE_URL)
@@ -130,7 +140,7 @@ def write_to_db(db_col, responses):
     """Takes list of audits and puts them into database"""
     user = input("Write to db? Y/N")
     if (user == 'Y') | (user == 'y'):
-
+        db_col.drop()  # erase collection so that next script doesnt get confused, poor baby
         print("Inserting into Database...")
         # for audit in responses:
         #     dbEntry = audit
