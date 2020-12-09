@@ -22,7 +22,7 @@ router.get("/:agent_name", function(req,res){ // :postID represents a variable p
         // console.log('agents'); 
         setTimeout(function(){ found_agents = agents; }, 3000);
         found_agents = agents;
-        console.log('agents', found_agents)
+        console.log('agents')
         if(err){console.log(err);}
     });
     Audit.find({agent_name:req.params.agent_name}).exec(function(err, audits){ // find all audits done by a particular agent
@@ -38,7 +38,7 @@ router.get("/:agent_name", function(req,res){ // :postID represents a variable p
         var sorted_daily_audit_data = [];
         for (i=0; i<found_agents.length; i++){
             if (found_agents[i].agent_name === req.params.agent_name){
-                agent = found_agents[i];
+                agent = found_agents[i]; // the agent in the URL
             }
         };
         
@@ -51,45 +51,30 @@ router.get("/:agent_name", function(req,res){ // :postID represents a variable p
         agent_data['number_of_inspections'] = audits.length;
         agent_data['agent_name'] = audits[0].agent_name;
 
-        audits.forEach(audit => {
-            // console.log('audit date: ', audit.date.toISOString())
-            // console.log('day', audit.date.getUTCDate());
-            // console.log('month', audit.date.getMonth());
-            // console.log('year', audit.date.getFullYear());
-            // console.log('\n\n')
-            date_string = audit.date.toISOString().slice(0,10);
-            if (date_string in daily_audit_count) {
-                daily_audit_count[date_string] += 1;
-            } else {
-                daily_audit_count[date_string] = 1;
-                day_labels.push(date_string)
-            };
-        });
-        for (var key in daily_audit_count) {
-            if (daily_audit_count.hasOwnProperty(key)) {
-                daily_audit_data.push(parseFloat(daily_audit_count[key]));
-            }
-        };
+        // generate date labels counting backwards since today
+        //console.log('time series', agent.time_series.length)
+        for (var i = agent.time_series.length; i > 0; i--){
+            var now = new Date();
+            var previous_day = new Date();
+            previous_day.setTime(now.getTime() - 1000*60*60*24*i); // milliseconds since 1970
+            day_labels.push(previous_day.toISOString().slice(5,10));
+            //console.log(day_labels);
+
+            //.toISOString().slice(0,10);
+        }
+        // get GPS data for each audit
+        var audit_GPS_data = [];
+        for (i = 0; i<audits.length; i++){
+            var long = audits[i]['location']['long']; 
+            var lat = audits[i]['location']['lat'];
+            var addr = audits[i]['location']['address'];
+            audit_GPS_data[i] = {long, lat, addr};
+        }
+        console.log('audit_GPS_data');
+        agent_data['GPS_data'] = audit_GPS_data;
         
-        // sort parallel arrays: day_labels & daily_audit_data
-        var list = [];
-        for (var j = 0; j < day_labels.length; j++){
-            list.push({'date': day_labels[j], 'audits': daily_audit_data[j]});
-        }
-
-        list.sort(function(a, b) {
-            return ((a.date < b.date) ? -1 : ((a.date == b.date) ? 0 : 1));
-            //Sort could be modified to, for example, sort on the age 
-            // if the name is the same.
-        });
-        for (var k = 0; k < list.length; k++) {
-            day_labels[k] = list[k].date;
-            daily_audit_data[k] = list[k].audits;
-        }
-
-        // send sorted day data
-        agent_data['day_labels'] = day_labels; // only the days that contain atleast 1 audit
-        agent_data['daily_audit_data'] = daily_audit_data; // total number of audits for each day
+        agent_data['day_labels'] = day_labels;
+        agent_data['daily_audit_data'] = agent.time_series;
         
         res.render("inspections/view",{audits:audits, agent_data:agent_data, agents:found_agents});
     });
