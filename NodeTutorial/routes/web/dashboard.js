@@ -12,7 +12,7 @@ function sum(obj) {
 }
 
 var router = express.Router();
-router.use(ensureAuthenticated);// ensures that all routes in this route are now authenticated
+//router.use(ensureAuthenticated);// ensures that all routes in this route are now authenticated
 
 // how do I talk to the routes in this page??
 router.get("/", function(req, res){ // implicit /post before each of these routes
@@ -29,12 +29,7 @@ router.get("/", function(req, res){ // implicit /post before each of these route
         var audit_location_data = []
 
         audits.forEach(audit => {
-            if (audit_location_data.length < 20) {
-                audit_location_data.push('['+audit.location.lat+","+audit.location.long+']');
-                if (audit_location_data.length == 20) {
-                    ']'
-                }
-            }
+            audit_location_data.push('['+audit.location.lat+","+audit.location.long+']');
             // Create Agent_Dictionaries
             // Create Agent Name List
             if (audit.agent_name in agent_name_to_inspection_count) {
