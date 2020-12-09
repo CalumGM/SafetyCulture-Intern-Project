@@ -30,44 +30,61 @@
 <style type="text/css">
     /* Set the size of the div element that contains the map */
     #map {
-    height: 400px;
+    height: 300px;
     /* The height is 400 pixels */
     width: 100%;
     /* The width is the width of the web page */
     }
 </style>
-<script>
+<script> // map script
     // Initialize and add the map
     function initMap() {
-    
+
     // The location of Townsville
     const townsville = { lat: -19.288, lng: 146.763 };
     // The map, centered at Townsville
     const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 11,
+        zoom: 12,
         center: townsville,
+        disableDefaultUI: true,
     });
+    var count = 0;
     <% agent_data['GPS_data'].forEach(function(street_location) { %>
-        var audit_index = <%-agent_data['GPS_data'].indexOf(street_location)%>
+        count = count +1;
+        var audit_index = <%-agent_data['GPS_data'].indexOf(street_location)%>;
         var address = <%- "'" +  street_location.addr + "'" %>;
-        var coordinates = {lat:<%- street_location.long %>,lng: <%- street_location.lat %>}
-        var audit_id =  <%- "'" + audits[agent_data['GPS_data'].indexOf(street_location)].audit_id + "'"%>
-        var infowindow = new google.maps.InfoWindow({
-            content: address,
-        });
+        var coordinates = {lat:<%- street_location.lat %>,lng: <%- street_location.long %>}
+        var audit_id =  <%- "'" + audits[agent_data['GPS_data'].indexOf(street_location)].audit_id + "'"%>;
+
+
+        
         var marker = new google.maps.Marker({
             position: coordinates,
             map: map,
+    
         });
+        var infowindow = new google.maps.InfoWindow({
+            content: address,
+        });
+        //infowindow.open(map, marker);
+        google.maps.event.addListener(map, 'click', (function(infowindow) {
+            return function() {
+                infowindow.close();
+            }
+        })(infowindow));
+
         google.maps.event.addListener(marker, 'click', (function(marker, audit_index) {
-        return function() {
-          var contentString = <%- "'" +  street_location.addr + "'" %>;
-          infowindow.setContent(contentString);
-          infowindow.open(map, marker);
-        }
+            return function() {
+                var contentString = address;
+                infowindow.setContent(contentString);
+                infowindow.open(map, marker);
+            }
         })(marker, audit_index));
-        console.log(audit_index)
+
+        
+       
     <% }) %>
+    console.log(count)
     }
     
 </script>
@@ -86,22 +103,13 @@
                 labels: [<%- "'"+ agent_data['day_labels'].join("','") + "'" %>],
                 datasets: [{
                 label: <%- "'"+ '# of Inspections by ' + agent_data['agent_name'] + "'"%> ,
-                data: [<%=agent_data['daily_audit_data'] %>],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)','rgba(54, 162, 235, 0.2)','rgba(255, 206, 86, 0.2)','rgba(75, 192, 192, 0.2)','rgba(153, 102, 255, 0.2)','rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)','rgba(54, 162, 235, 1)','rgba(255, 206, 86, 1)','rgba(75, 192, 192, 1)','rgba(153, 102, 255, 1)','rgba(255, 159, 64, 1)'
-                ],
+                data: [<%=agent_data['number_of_audits_per_day'] %>],
+                backgroundColor:'rgba(255, 99, 132, 0.2)',
+                borderColor:'rgba(255, 99, 132, 1)',
                 borderWidth: 1
                 }]
             };
     barChartOptions = {
-                elements: {
-                    line: {
-                        tension: 0.2
-                    }
-                },
                 aspectRatio: 1.5,
                 title:{
                     display:true,
@@ -145,7 +153,7 @@
             };
 
     var agentChart = new Chart(agentCanvasjs, {
-        type:'line', // bar, horizontal, pie, line, doughnut, radar, polarArea
+        type:'bar', // bar, horizontal, pie, line, doughnut, radar, polarArea
         data:barChartData,
         options:barChartOptions
     });
