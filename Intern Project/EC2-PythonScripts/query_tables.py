@@ -53,7 +53,6 @@ def reformat_audits(db_retrieve_col):
                                            "header_items.responses.text": 1,
                                            "header_items.responses.location_text": 1}):
         # assign query results to variables
-        # print(audit)
         score = str(audit["audit_data"]["score"])
         total_score = str(audit["audit_data"]["total_score"])
         score_percentage = str(audit["audit_data"]["score_percentage"])
@@ -61,15 +60,15 @@ def reformat_audits(db_retrieve_col):
                                                   "%Y-%m-%dT%H:%I:%S.%fZ")
         datetime_var = datetime.datetime.strftime(datetime_var, "%Y-%m-%d")
         datetime_var = datetime.datetime.strptime(datetime_var, "%Y-%m-%d")
-
-        # date = datetime_var.date()
-        agent_name = audit["header_items"][2]["responses"]["text"]
-        agent_list.append(agent_name)
         address_lat_long = str(audit["header_items"][3]["responses"]["location_text"]).split("\n")
         address = address_lat_long[0]
         lat_long = address_lat_long[1].split(",")
         lat = lat_long[0].lstrip("(")  # around -19
         long = lat_long[1].strip(")")  # around 146
+
+        # set up unique names for later processing
+        agent_name = audit["header_items"][2]["responses"]["text"]
+        agent_list.append(agent_name)
 
         # create new dictionary
         new_audit_dict = {"audit_id": audit["audit_id"], "agent_name": agent_name, "date": datetime_var,
@@ -84,7 +83,6 @@ def reformat_audits(db_retrieve_col):
     return audit_dict_list, unique_agent_list
 
 
-# TODO create time series data that can work with initial transform. it must find min date and then create array, adding values from each audit that lies on a date for an individual person
 def agent_transform(unique_agents, audit_dict_list, db_agents_col):
     """create the dictionaries that will update/insert in the agents collection"""
     agent_dict_list = []
@@ -129,18 +127,12 @@ def agent_transform(unique_agents, audit_dict_list, db_agents_col):
             for i in range(1, elapsed_time+1):
                 temp_array = []
                 count2 = 0
-
-                # days = datetime.datetime.now() + datetime.timedelta(days=(int(elapsed_time.days) + i))
                 days = datetime.datetime.now()
-
                 days = days-datetime.timedelta(days=(int(elapsed_time)-i))
 
                 # TODO array iterates through but will produce the same result for each run through.
                 for audit in audit_dict_list:
-                    pass
-                    # days = datetime.datetime.now() - datetime.timedelta(days=(int(elapsed_time.days)+i))
-                    #
-
+                    pass  # TODO see wtf is happening here
                     if audit["agent_name"] == agent:
                         if str(audit["date"].date()) == str(days.date()):
                             temp_array.append(float(audit["scores"]["score_percentage"]))
@@ -167,11 +159,12 @@ def agent_transform(unique_agents, audit_dict_list, db_agents_col):
 def write_to_db(db_audits_col, db_agents_col, audit_dict_list, agent_dict_list, all_agents, unique_agents):
     """Takes lists of audits and agents and correctly places them into database"""
     # insert new audits
+    print("Inserting Audits to Database...")
     db_audits_col.insert_many(audit_dict_list)
-
-    print("audits done")
+    print("...Done")
 
     # check condition for agent and take appropriate action
+    print("Processing Agents and Inserting into Database...")
     for agent in unique_agents:
         if agent in all_agents:
             # agent exists and has a new audit
@@ -191,6 +184,7 @@ def write_to_db(db_audits_col, db_agents_col, audit_dict_list, agent_dict_list, 
             time_series[1].append(0)
             db_agents_col.update_one({"agent_name": agent}, time_series)
             print("3")
+    print("..Done")
 
 
 main()
