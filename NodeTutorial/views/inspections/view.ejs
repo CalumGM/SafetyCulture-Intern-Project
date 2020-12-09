@@ -49,7 +49,9 @@
         disableDefaultUI: true,
     });
     var count = 0;
+    
     <% agent_data['GPS_data'].forEach(function(street_location) { %>
+        
         count = count +1;
         var audit_index = <%-agent_data['GPS_data'].indexOf(street_location)%>;
         var address = <%- "'" +  street_location.addr + "'" %>;

@@ -63,12 +63,12 @@ router.get("/:agent_name", function(req,res){ // :postID represents a variable p
         agent_data['day_labels'] = day_labels;
         agent_data['number_of_audits_per_day'] = agent.time_series[1];
         agent_data['audit_score_per_day'] = agent.time_series[0];
-        if (audits.length === agent.time_series[1].length){
-            console.log('yay');
-        } else {
-            console.log('audits length:',audits.length);
-            console.log('time series length:', agent.time_series[1].length)
-        }
+        // if (audits.length === agent.time_series[1].length){
+        //     console.log('yay');
+        // } else {
+        //     console.log('audits length:',audits.length);
+        //     console.log('time series length', agent.time_series[1].length)
+        // }
 
         res.render("inspections/view",{audits:audits, agent_data:agent_data, agents:found_agents});
     });
