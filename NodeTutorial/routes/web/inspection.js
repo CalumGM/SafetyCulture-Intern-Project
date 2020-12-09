@@ -2,17 +2,91 @@ var express = require("express");
 var passport = require("passport");
 var ensureAuthenticated = require("../../auth/auth").ensureAuthenticated;
 
-var Inspection = require("../../models/inspection");
-
+var Audit = require("../../models/audits");
+var Agent = require("../../models/agents");
 var router = express.Router();
 router.use(ensureAuthenticated);// ensures that all routes in this route are now authenticated
-
+var found_agents;
+var agent;
 // how do I talk to the routes in this page??
 router.get("/", function(req, res){ // implicit /post before each of these routes
-    Inspection.find({}).exec(function(err, inspections){ // find in database
+    Agent.find({}).exec(function(err, agents){ // find all agents in database
         if(err){console.log(err);}
-        res.render("inspections/inspections", {inspections:inspections}); // passing on the posts that were found matching the userID
+        res.render("inspections/inspections", {agents:agents}); // passing on the posts that were found matching the userID
     });
  });
+
+router.get("/:agent_name", function(req,res){ // :postID represents a variable parameter as a route
+    Agent.find({}).exec(function(err, agents){ // find all agents in database
+        //doesnt work without console.log
+        // console.log('agents'); 
+        setTimeout(function(){ found_agents = agents; }, 3000);
+        found_agents = agents;
+        console.log('agents')
+        if(err){console.log(err);}
+    });
+    Audit.find({agent_name:req.params.agent_name}).exec(function(err, audits){ // find all audits done by a particular agent
+        if(err){console.log(err);}
+        // do all calcs in here. Yes, because backend does all the heavy lifting
+        var agent_data = {};
+        var audits_data = {};
+        var i;
+        var daily_audit_count = {};
+        var day_labels = [];
+        var daily_audit_data = [];
+        var sorted_day_labels = [];
+        var sorted_daily_audit_data = [];
+        for (i=0; i<found_agents.length; i++){
+            if (found_agents[i].agent_name === req.params.agent_name){
+                agent = found_agents[i]; // the agent in the URL
+            }
+        };
+        
+        if (!agent.avg_score){ // treating the data as dirty when we know it is clean
+            agent_data['avg_score'] = calculateAverageScore(audits);
+            // push new calculated average (not gonna do) 
+        } else{
+            agent_data['avg_score'] = agent.avg_score;
+        };
+        agent_data['number_of_inspections'] = audits.length;
+        agent_data['agent_name'] = audits[0].agent_name;
+
+        // generate date labels counting backwards since today
+        //console.log('time series', agent.time_series.length)
+        for (var i = agent.time_series.length; i > 0; i--){
+            var now = new Date();
+            var previous_day = new Date();
+            previous_day.setTime(now.getTime() - 1000*60*60*24*i); // milliseconds since 1970
+            day_labels.push(previous_day.toISOString().slice(5,10));
+            //console.log(day_labels);
+
+            //.toISOString().slice(0,10);
+        }
+        // get GPS data for each audit
+        var audit_GPS_data = [];
+        for (i = 0; i<audits.length; i++){
+            var long = audits[i]['location']['long']; 
+            var lat = audits[i]['location']['lat'];
+            var addr = audits[i]['location']['address'];
+            audit_GPS_data[i] = {long, lat, addr};
+        }
+        console.log('audit_GPS_data');
+        agent_data['GPS_data'] = audit_GPS_data;
+        
+        agent_data['day_labels'] = day_labels;
+        agent_data['daily_audit_data'] = agent.time_series;
+        
+        res.render("inspections/view",{audits:audits, agent_data:agent_data, agents:found_agents});
+    });
+});
+
+function calculateAverageScore(audits){
+    var total = 0;
+    var count = audits.length;
+    audits.forEach(audit => {
+        total += parseFloat(audit.score.percentage_score);
+    });
+    return total/count;
+}
 
  module.exports = router;

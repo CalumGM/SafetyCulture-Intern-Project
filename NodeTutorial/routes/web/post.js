@@ -63,7 +63,6 @@ router.post("/update", async function(req, res){
         res.redirect("/posts/" + req.body.postid);  // go back to post page
 
     } catch (err) {
-        console.log("error happened");
         res.status(500).send(err);
     }
 //change

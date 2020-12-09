@@ -1,5 +1,23 @@
+<head>
+    <style type="text/css">
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+          height: 100%;
+        }
+    
+        /* Optional: Makes the sample page fill the window. */
+        html,
+        body {
+          height: 250px;
+          margin: 0;
+          padding: 0;
+        }
+    </style>
+    <script src ="https://polyfill.io/v3/polyfill.min.js?features=default" ></script>
+    <script src ="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtMoG5td5VLKdTtalSQ2umxDQujfr4_LA&callback=initMap&libraries=visualization&v=weekly" defer></script>
+</head>
 <%- include('../_partial/_header'); -%>
-
 <div class="row">
     <div class="col-md-6">
         <h1>Data overview</h1>
@@ -12,18 +30,235 @@
         <!-- <a href="/posts/view" type="button" class="btn btn-default">View Audits</a> -->
     </div>
 </div>
-<h3>Total Inspections: <%= inspections.length;%></h3>
-<h3>Agents:</h3>
-<% inspections.forEach(function(inspection) { %> 
-    <!-- loop through every post passed through-->
-    <!-- inspection.header_items.forEach(function(header_item) {}
-        print(header_item['parent_id'])
-        )}-->
-    <div class="col-sm-6 col-md-6">
-        <h3><%= inspection.audit_id %></h3>
-        <p><%= inspection.createdAt %></p>
-        <h1><%= myVariable %></h1>
+<div class="col-sm-12 col-md-12">
+    <div class="col-sm-12 col-md-6">
+        <div class="agent_performance">
+            <canvas id="agent_performance_chart"></canvas>
+        </div>
     </div>
-<% }) %>
+    <div class="col-sm-12 col-md-6">
+        <div class="team_performance">
+            <canvas id="team_performance_chart"></canvas>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <div class="agent_alignment">
+            <canvas id="agent_alignment_chart"></canvas>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <div class="team_hotspots">
+            <div id="map"></div>
+            </p>
+        </div>
+    </div>
 
+</div>
+<script>
+    let map;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: -19.305, lng: 146.747 },
+            zoom: 13,
+            mapTypeId: "terrain",
+        });
+        draw_heatmap([<%- audit_location_data.join()%>]);
+    }
+
+    const draw_heatmap = function(results) {
+        heatmapData = [];
+        for (let i = 0; i < results.length; i++) {
+            const coords = results[i];
+            const latLng = new google.maps.LatLng(coords[0], coords[1]);
+            heatmapData.push(latLng);
+        }
+        const heatmap = new google.maps.visualization.HeatmapLayer({
+            data: heatmapData,
+            dissipating: true,
+            map: map,
+        });
+    };
+</script>
+<script> 
+    // graph plotting using Chartjs
+    var agentPerformanceJS = document.getElementById('agent_performance_chart').getContext('2d');
+    var teamPerformanceJS = document.getElementById('team_performance_chart').getContext('2d');
+    var agentAlignmentJS = document.getElementById('agent_alignment_chart').getContext('2d');
+    // Global Options
+    Chart.defaults.global.defaultFontFamily.Chart = 'Lato';
+    Chart.defaults.global.defaultFontSize.Chart = 18;
+    Chart.defaults.global.defaultFontColor.Chart = '#000';
+    Chart.defaults.global.hover.mode = 'nearest';
+
+    agentPerformanceChartData = {
+                labels: [<%- "'"+ agent_names.join("','") + "'" %>],
+                datasets: [{
+                    label: '# of Inspections Completed',
+                    data: [<%=agent_totals %>],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+    agentPerformanceChartOptions = {
+                title:{
+                    display:true,
+                    text:'Agent Overall Inspections',
+                    fontSize: 25,
+                    fontColor: '#000'
+                },
+                legend:{
+                    display: false, // set to true to show the legend
+                    position:'right',
+                    labels:{
+                        fontColor: '#000'
+                    }
+                },
+                layout:{
+                    padding:{
+                        left:0, right:0, bottom:0, top:0
+                    }
+                },
+                scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+                }
+            };
+
+    alignmentChartData = {
+                labels: [<%- "'"+ agent_names.join("','") + "'" %>],
+                datasets: [{
+                    label: 'Relative Property Score',
+                    data: [<%=agent_rel_scores %>],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+    alignmentChartOptions = {
+                title:{
+                    display:true,
+                    text:'Agent Inpection Score Alignment',
+                    fontSize: 25,
+                    fontColor: '#000'
+                },
+                legend:{
+                    display: false, // set to true to show the legend
+                    position:'right',
+                    labels:{
+                        fontColor: '#000'
+                    }
+                },
+                layout:{
+                    padding:{
+                        left:0, right:0, bottom:0, top:0
+                    }
+                },
+                scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+                }
+            };
+    lineChartData = {
+                labels: [<%- "'"+ day_labels.join("','") + "'" %>],
+                datasets: [{
+                    label: 'Relative Property Score',
+                    data: [<%=daily_audit_count %>],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 3
+                }]
+            };
+    lineChartOptions = {
+                title:{
+                    display:true,
+                    text:'Team Daily Inspection Performance',
+                    fontSize: 26,
+                    fontColor: '#000'
+                },
+                legend:{
+                    display: false, // set to true to show the legend
+                    position:'right',
+                    labels:{
+                        fontColor: '#000'
+                    }
+                },
+                layout:{
+                    padding:{
+                        left:0, right:0, bottom:0, top:0
+                    }
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            };
+    var agentPerformance = new Chart(agentPerformanceJS, {
+        type:'bar', // bar, horizontal, pie, line, doughnut, radar, polarArea
+        data:agentPerformanceChartData,
+        options:agentPerformanceChartOptions
+    });
+    var teamPerformance = new Chart(teamPerformanceJS, {
+        type: 'line',
+        data: lineChartData,
+        options: lineChartOptions
+    });
+    var agentAlignment = new Chart(agentAlignmentJS, {
+        type: 'bar',
+        data:alignmentChartData,
+        options:alignmentChartOptions
+    });
+</script>
 <%- include ('../_partial/_footer'); -%>
