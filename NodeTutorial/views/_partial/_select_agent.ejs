@@ -18,7 +18,7 @@
     <h1>Agents</h1>
 </div>
 <div class="row" style="margin-top: -20px;" > <!-- up offset for row-->
-    <div class="col-md-3">
+    <div class="col-md-2">
             <ul class="list-group" style="margin-top: 20px;"> <!-- down offset for LHS -->
                 <a onclick="toggleText('all_agents')" class="list-group-item disabled">All Agents</a>
                 <% agents.forEach(function(agent) { %> <!-- loop through every inspection passed through-->
@@ -30,7 +30,7 @@
         )}-->
     </div>
     <% agents.forEach(function(agent) { %>
-    <div class="col-md-8 lefthandselector" id="<%=agent.agent_name%>" style="display:none">
+    <div class="col-md-12 lefthandselector" id="<%=agent.agent_name%>" style="display:none">
         <h4><%= agent.agent_name%></h4>
         <!-- put all the other data in here-->
     </div>
