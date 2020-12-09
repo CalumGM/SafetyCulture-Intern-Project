@@ -3,7 +3,7 @@
 <%- include('../_partial/_select_agent'); -%>
 
 
-<div class="col-md-9"> <!-- RHS column -->
+<div class="col-md-10"> <!-- RHS column -->
     <!--<h1>Inspections completed by <%= agent_data['agent_name'] %></h1>-->
     <div class="row"> <!-- top row -->
         <h4># Inspections: <%= agent_data['number_of_inspections']%></h4>
@@ -15,11 +15,78 @@
         </div>
 
         <div class="col-md-6">
+            <h4><div id="map"></div></h4>
         </div>
     </div>
+    <row>
+        <!-- the row below the bar chart -->
+    </row>
 
 </div>
 </div> <!-- ends the row div, place columns above this-->
+
+<!-- Google maps plotting-->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAH_H9EYGbVq07pReSI_32NAh1iODKDyno&callback=initMap&libraries=&v=weekly"defer></script>
+<style type="text/css">
+    /* Set the size of the div element that contains the map */
+    #map {
+    height: 400px;
+    /* The height is 400 pixels */
+    width: 100%;
+    /* The width is the width of the web page */
+    }
+</style>
+<script>
+    
+    // Initialize and add the map
+    function initMap() {
+    
+    // The location of Townsville
+    const townsville = { lat: -19.288, lng: 146.763 };
+    // The map, centered at Townsville
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 11,
+        center: townsville,
+    });
+    <% agent_data['GPS_data'].forEach(function(street_location) { %>
+        var audit_index = <%-agent_data['GPS_data'].indexOf(street_location)%>
+        var address = <%- "'" +  street_location.addr + "'" %>;
+        var coordinates = {lat:<%- street_location.long %>,lng: <%- street_location.lat %>}
+        var audit_id =  <%- "'" + audits[agent_data['GPS_data'].indexOf(street_location)].audit_id + "'"%>
+        var infowindow = new google.maps.InfoWindow({
+            content: address,
+        });
+        var marker = new google.maps.Marker({
+            position: coordinates,
+            map: map,
+        });
+        google.maps.event.addListener(marker, 'click', (function(marker, audit_index) {
+        return function() {
+          var contentString = <%- "'" +  street_location.addr + "'" %>;
+          infowindow.setContent(contentString);
+          infowindow.open(map, marker);
+        }
+        })(marker, audit_index));
+        console.log(audit_index)
+        
+    <% }) %>
+
+    // pop-up text
+    // The marker, positioned in Townsville
+    /*
+    var marker = new google.maps.Marker({
+        position: my_dict,
+        map: map
+        //label: {text: "Townsville...You will never find a more wretched hive of scum and villainy. We must be cautious"}
+    });
+    marker.addListener("click", () => {
+        infowindow.open(map, marker);
+    });
+    */
+    }
+    
+</script>
+
 
 <script> // graph plotting using Chartjs
     // Global Options
@@ -33,7 +100,7 @@
     barChartData = {
                 labels: [<%- "'"+ agent_data['day_labels'].join("','") + "'" %>],
                 datasets: [{
-                label: '# of Votes',
+                label: <%- "'"+ '# of Inspections by ' + agent_data['agent_name'] + "'"%> ,
                 data: [<%=agent_data['daily_audit_data'] %>],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)','rgba(54, 162, 235, 0.2)','rgba(255, 206, 86, 0.2)','rgba(75, 192, 192, 0.2)','rgba(153, 102, 255, 0.2)','rgba(255, 159, 64, 0.2)'
@@ -45,10 +112,11 @@
                 }]
             };
     barChartOptions = {
+                aspectRatio: 1.5,
                 title:{
                     display:true,
-                    text:'Bar Chart',
-                    fontSize: 25,
+                    text:<%- "'"+ '2020 Inspections by ' + agent_data['agent_name'] + "'"%>,
+                    fontSize: 20,
                     fontColor: '#000'
                 },
                 legend:{
@@ -78,7 +146,7 @@
                         beginAtZero: true
                     },
                     scaleLabel: {
-                        display: true,
+                        display: false,
                         labelString: 'Time'
                     }
                 }]
