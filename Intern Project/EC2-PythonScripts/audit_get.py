@@ -5,6 +5,8 @@ Gets audits from database with specific template ID then puts them into local Mo
 import pymongo
 import requests
 import datetime
+import time
+
 
 USER = 'christopher.ordorica@my.jcu.edu.au'
 PWD = 'password'
@@ -35,7 +37,7 @@ def main():
     db_col.drop()  # erase collection so that next script doesnt get confused, poor baby
     audit_list = retrieve_audit_ids(url)
     responses = retrieve_audit_data(audit_list)
-    # write_to_db(db_col, responses)
+    write_to_db(db_col, responses)
     close_db(db_client)
 
 
@@ -70,12 +72,22 @@ def retrieve_audit_data(audit_list):
     print(f"There are {len(audit_list)} Audits")
     batch_requests = []
     responses = []
+    timer = datetime.datetime.now()
     for x in enumerate(audit_list):  # can try to make a batch request
+        if (x[0]+1) % 90 == 0:
+            timer = datetime.datetime.now() - timer
+            sleep_time = round(60 - timer.total_seconds())+1
+            print("Limiting Rate - Sleep: ", sleep_time, " seconds")
+            time.sleep(sleep_time)
+            timer = datetime.datetime.now()
+
+
         audit_id = x[1]['audit_id']
         audit_url = '/audits/' + audit_id
         batch_requests.append('{"method": "get", "path": "' + audit_url + '"}')
 
-        # a multiple of 15 since only 15 request per batch are allowed, skip first one since it will be empty
+        # a multiple of 15 since only 15 request per batch are allowed, skip first one since it will be empty,
+        # also execute on last iteration of loop
         if (((x[0])+1) % 15 == 0) & (x[0] != 0) | (x[0] == len(audit_list) - 1):
             print(f"{(x[0] + 1.00) / len(audit_list) * 100 :.2f}%")
             batch = requests.post("https://sandpit-api.safetyculture.io/batch", headers=headers, data='{"requests": [' + ', '.join(batch_requests) + ']}')
@@ -85,12 +97,15 @@ def retrieve_audit_data(audit_list):
     print("Requested Audits Length: " + str(len(responses)))
     print("Length of Audit List: " + str(len(audit_list)))
     print("...All Audits Retrieved")
+    error_count = 0
     for response in responses:
         try:
             if response["statusCode"]:
+                error_count += 1
                 print("Error")
         except KeyError:
             pass
+    print("Error Count: ", error_count)
     return responses
 
 
@@ -113,11 +128,19 @@ def db_connect():
 
 def write_to_db(db_col, responses):
     """Takes list of audits and puts them into database"""
-    print("Inserting into Database...")
-    for audit in responses:
-        dbEntry = audit
-        db_col.insert_one(dbEntry)
-    print("...Done")
+    user = input("Write to db? Y/N")
+    if (user == 'Y') | (user == 'y'):
+
+        print("Inserting into Database...")
+        # for audit in responses:
+        #     dbEntry = audit
+        #     db_col.insert_one(dbEntry)
+        db_col.insert_many(responses)  # TODO test this code under complete conditions
+        print("...Done")
+
+    else:
+        print("fail condition: exit")
+        exit()
 
 
 def close_db(db_client):
