@@ -29,6 +29,10 @@ def db_connect():
     db_retrieve_col = db_name['inspections']  # inspections collection, staging db
     db_audits_col = db_name['audits']  # audits collection
     db_agents_col = db_name['agents']  # agents collection
+    # TODO change back from temp
+    # db_audits_col = db_name['audits_temp']  # audits collection
+    # db_agents_col = db_name['agents_temp']  # agents collection
+    db_retrieve_col = db_name['temp_inspections']  # inspections collection, staging db
     return db_client, db_retrieve_col, db_audits_col, db_agents_col
 
 
@@ -72,17 +76,24 @@ def reformat_audits(db_retrieve_col):
     return audit_dict_list, unique_agent_list
 
 
-# TODO two functions. one for once off and other for daily. first below is now daily
+# TODO create time series data that can work with initial transform. it must find min date and then create array, adding values from each audit that lies on a date for an individual person
 def agent_transform(unique_agents, audit_dict_list, db_agents_col):
     """create the dictionaries that will update/insert in the agents collection"""
     agent_dict_list = []
+    date_list = []
+
+    # created in case this is first time transformation TODO maybe change this to avoid wasting processing
+    for audit in audit_dict_list:
+        date_list.append(audit["date"])
+    oldest_date = min(date_list)
+
     for agent in unique_agents:
         # query that uses agent name to retrieve that agent's document
 
         historical_agent = db_agents_col.find_one({"agent_name": agent}, {"_id": 0, "avg_score": 1, "total_inspection_count": 1, "time_series": 1})
 
         # if agents collection is empty, set default values to prevent exception
-        if historical_agent is None:
+        if historical_agent is None:  # if historical_agent is empty, then this script is running in initial transform rather than daily
             historical_score = 0.0000
             historical_inspection_count = 0
             time_series = [[], []]
@@ -104,8 +115,39 @@ def agent_transform(unique_agents, audit_dict_list, db_agents_col):
         new_count = historical_inspection_count + count
         new_score = ((historical_score * historical_inspection_count) + daily_score) / new_count
 
-        time_series[0].append(daily_score / count)
-        time_series[1].append(count)
+        if historical_agent is None:
+            elapsed_time = int(str((datetime.datetime.now() - oldest_date).days)) + 1
+
+            for i in range(1, elapsed_time+1):
+                temp_array = []
+                count2 = 0
+
+                # days = datetime.datetime.now() + datetime.timedelta(days=(int(elapsed_time.days) + i))
+                days = datetime.datetime.now()
+
+                days = days-datetime.timedelta(days=(int(elapsed_time)-i))
+
+                # TODO array iterates through but will produce the same result for each run through.
+                for audit in audit_dict_list:
+                    pass
+                    # days = datetime.datetime.now() - datetime.timedelta(days=(int(elapsed_time.days)+i))
+                    #
+
+                    if audit["agent_name"] == agent:
+                        if str(audit["date"].date()) == str(days.date()):
+                            temp_array.append(float(audit["scores"]["score_percentage"]))
+                            count2 += 1
+
+                if count2 != 0:
+                    time_series[0].append(sum(temp_array))
+                    time_series[1].append(count2)
+                else:
+                    time_series[0].append(0.0000)
+                    time_series[1].append(0)
+
+        else:
+            time_series[0].append(daily_score / count)
+            time_series[1].append(count)
 
         agent_dict = {"agent_name": agent, "avg_score": f"{new_score:.4f}", "total_inspection_count": new_count,
                       "time_series": time_series}
@@ -119,23 +161,28 @@ def write_to_db(db_audits_col, db_agents_col, audit_dict_list, agent_dict_list, 
     # insert new audits
     db_audits_col.insert_many(audit_dict_list)
 
+    print("audits done")
+
     # check condition for agent and take appropriate action
     for agent in unique_agents:
         if agent in all_agents:
             # agent exists and has a new audit
-            db_agents_col.update({"agent_name": agent}, {"avg_score": agent_dict_list["avg_score"], "total_inspection_count": agent_dict_list["total_inspection_count"], "time_series": agent_dict_list["time_series"]})
+            db_agents_col.update_one({"agent_name": agent}, {"avg_score": agent_dict_list["avg_score"], "total_inspection_count": agent_dict_list["total_inspection_count"], "time_series": agent_dict_list["time_series"]})
+            print("1")
         else:
             # agent does not exist and has a new audit
             for agent_dict in agent_dict_list:
                 if agent_dict["agent_name"] == agent:
-                    db_agents_col.insert(agent_dict)
+                    db_agents_col.insert_one(agent_dict)
+                    print("2")
     for agent in all_agents:
         if agent not in unique_agents:
             # agent exists but has no new audit
             time_series = db_agents_col.find({"agent_name": agent}, {"time_series": 1})
             time_series[0].append(0.0000)
             time_series[1].append(0)
-            db_agents_col.update({"agent_name": agent}, time_series)
+            db_agents_col.update_one({"agent_name": agent}, time_series)
+            print("3")
 
 
 main()

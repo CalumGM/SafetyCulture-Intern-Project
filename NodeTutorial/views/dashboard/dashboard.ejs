@@ -1,5 +1,49 @@
-<%- include('../_partial/_header'); -%>
+<head>
+    <style type="text/css">
+        /* Always set the map height explicitly to define the size of the div
+         * element that contains the map. */
+        #map {
+          height: 100%;
+        }
+    
+        /* Optional: Makes the sample page fill the window. */
+        html,
+        body {
+          height: 250px;
+          margin: 0;
+          padding: 0;
+        }
+    </style>
+    <script src ="https://polyfill.io/v3/polyfill.min.js?features=default" ></script>
+    <script src ="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtMoG5td5VLKdTtalSQ2umxDQujfr4_LA&callback=initMap&libraries=visualization&v=weekly"></script>
+    <script>
+    let map;
 
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: -19.305, lng: 146.747 },
+            zoom: 13,
+            mapTypeId: "terrain",
+        });
+        draw_heatmap([<%- audit_location_data.join()%>]);
+    }
+
+    const draw_heatmap = function (results) {
+        heatmapData = [];
+        for (let i = 0; i < results.length; i++) {
+            const coords = results[i];
+            const latLng = new google.maps.LatLng(coords[0], coords[1]);
+            heatmapData.push(latLng);
+        }
+        const heatmap = new google.maps.visualization.HeatmapLayer({
+            data: heatmapData,
+            dissipating: true,
+            map: map,
+        });
+    };
+    </script>
+</head>
+<%- include('../_partial/_header'); -%>
 <div class="row">
     <div class="col-md-6">
         <h1>Data overview</h1>
@@ -30,17 +74,13 @@
     </div>
     <div class="col-sm-12 col-md-6">
         <div class="team_hotspots">
-            <h3>Hotspots (Map?)</h3>
+            <div id="map"></div>
+            </p>
         </div>
     </div>
 
 </div>
-<div>
-    <br/>
-    <br/>
-    <br/>
-</div>
-<%=daily_audit_count%>
+
 <script> 
     // graph plotting using Chartjs
     var agentPerformanceJS = document.getElementById('agent_performance_chart').getContext('2d');
@@ -150,9 +190,7 @@
                 scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero: true,
-                        min: -1,
-                        max: 1
+                        beginAtZero: true
                     }
                 }]
                 }
@@ -178,14 +216,14 @@
                         'rgba(153, 102, 255, 1)',
                         'rgba(255, 159, 64, 1)'
                     ],
-                    borderWidth: 1
+                    borderWidth: 3
                 }]
             };
     lineChartOptions = {
                 title:{
                     display:true,
                     text:'Team Daily Inspection Performance',
-                    fontSize: 25,
+                    fontSize: 26,
                     fontColor: '#000'
                 },
                 legend:{
