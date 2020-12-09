@@ -14,33 +14,34 @@
           padding: 0;
         }
     </style>
-    <script src ="https://polyfill.io/v3/polyfill.min.js?features=default" ></script>
-    <script src ="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtMoG5td5VLKdTtalSQ2umxDQujfr4_LA&callback=initMap&libraries=visualization&v=weekly"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIwzALxUPNbatRBj3Xi1Uhp0fFzwWNBkE&callback=initMap&libraries=visualization&v=weekly" defer></script>
     <script>
     let map;
 
     function initMap() {
         map = new google.maps.Map(document.getElementById("map"), {
-            center: { lat: -19.305, lng: 146.747 },
             zoom: 13,
+            center: { lat: -19.305, lng: 146.747 },
             mapTypeId: "terrain",
         });
-        draw_heatmap([<%- audit_location_data.join()%>]);
+        draw_heatmap([[-19.293400695566252,146.7316702094252],[-19.31422204227383,146.7263019190611],[-19.299803053566905,146.71924038505114],[-19.315027913421375,146.74666448354637],[-19.31827938521682,146.7238199104636],[-19.311722733713854,146.74457366470435],[-19.302137310100267,146.73097251657035],[-19.300214427615906,146.7449037652663]]);
     }
 
-    const draw_heatmap = function (results) {
-        heatmapData = [];
-        for (let i = 0; i < results.length; i++) {
-            const coords = results[i];
-            const latLng = new google.maps.LatLng(coords[0], coords[1]);
-            heatmapData.push(latLng);
-        }
-        const heatmap = new google.maps.visualization.HeatmapLayer({
-            data: heatmapData,
-            dissipating: true,
-            map: map,
-        });
-    };
+    function draw_heatmap(results) {
+    var heatmapData = [];
+    for (let i = 0; i < results.length; i++) {
+        var coords = results[i];
+        var latLng = new google.maps.LatLng(coords[0], coords[1])
+        heatmapData.push(latLng);
+    }
+    const heatmap = new google.maps.visualization.HeatmapLayer({
+        data: heatmapData,
+        dissipating: true,
+        map: map,
+    });
+    }
+
     </script>
 </head>
 <%- include('../_partial/_header'); -%>
