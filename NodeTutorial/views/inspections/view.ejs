@@ -37,7 +37,6 @@
     }
 </style>
 <script>
-    
     // Initialize and add the map
     function initMap() {
     
@@ -68,21 +67,7 @@
         }
         })(marker, audit_index));
         console.log(audit_index)
-        
     <% }) %>
-
-    // pop-up text
-    // The marker, positioned in Townsville
-    /*
-    var marker = new google.maps.Marker({
-        position: my_dict,
-        map: map
-        //label: {text: "Townsville...You will never find a more wretched hive of scum and villainy. We must be cautious"}
-    });
-    marker.addListener("click", () => {
-        infowindow.open(map, marker);
-    });
-    */
     }
     
 </script>
@@ -112,6 +97,11 @@
                 }]
             };
     barChartOptions = {
+                elements: {
+                    line: {
+                        tension: 0.2
+                    }
+                },
                 aspectRatio: 1.5,
                 title:{
                     display:true,
@@ -155,7 +145,7 @@
             };
 
     var agentChart = new Chart(agentCanvasjs, {
-        type:'bar', // bar, horizontal, pie, line, doughnut, radar, polarArea
+        type:'line', // bar, horizontal, pie, line, doughnut, radar, polarArea
         data:barChartData,
         options:barChartOptions
     });
