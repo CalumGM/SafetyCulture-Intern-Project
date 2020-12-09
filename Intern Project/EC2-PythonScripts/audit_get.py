@@ -66,13 +66,24 @@ def retrieve_audit_ids(url):
 
 def retrieve_audit_data(audit_list):
     """From audit_list, get all information from each audit"""
+    print("Retrieving Audits...")
+    batch_requests = []
+    responses = []
     for x in enumerate(audit_list):  # can try to make a batch request
         audit_id = x[1]['audit_id']
-        audit_url = 'https://sandpit-api.safetyculture.io/audits/' + audit_id
-        response = requests.get(audit_url, headers=headers)
-        response_json = response.json()
-        audit_data_list.append(response_json)
-        print(str(((x[0]+1)/len(audit_list))*100) + "% - estimated")  # glorified 'loading bar'
+        audit_url = '/audits/' + audit_id
+        batch_requests.append('{"method": "get", "path": "' + audit_url + '"}')
+
+        # a multiple of 15 since only 15 request per batch are allowed, skip first one since it will be empty
+        if (((x[0])+1) % 15 == 0) & (x[0] != 0) | (x[0] == len(audit_list) - 1):
+            print(f"{(x[0] + 1.00) / len(audit_list) * 100 :.2f}%")
+            batch = requests.post("https://sandpit-api.safetyculture.io/batch", headers=headers, data='{"requests": [' + ', '.join(batch_requests) + ']}')
+            responses += batch.json()
+            batch_requests.clear()
+
+    print("Requested Audits Length: " + str(len(responses)))
+    print("Length of Audit List: " + str(len(audit_list)))
+    print("...All Audits Retrieved")
 
 
 def get_datetime():
