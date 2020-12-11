@@ -7,11 +7,16 @@ import random
 DATABASE_URL = "mongodb+srv://calum_maitland:InternDatabase@cluster0.qg16e.mongodb.net/RealEstateData?retryWrites" \
                "=true&w=majority"
 
-
 def main():
     """main bruh"""
-    # DOTO LIST:
     db_client, db_retrieve_col, db_audits_col, db_agents_col = db_connect()  # setup collections for other functions to use
+    try:  # flag may exist in db. If present, exit.
+        if not db_retrieve_col.find_one()["audit"]:  # see if flag is in db
+            print("Flag Detected: Exiting...")
+            exit()
+    except KeyError:
+        print("No Flag: Continuing...")
+    print("Moving On")
     audit_dict_list, unique_agents = reformat_audits(db_retrieve_col=db_retrieve_col)
     agent_dict_list = agent_transform(unique_agents=unique_agents, audit_dict_list=audit_dict_list, db_agents_col=db_agents_col)
 
@@ -24,15 +29,17 @@ def main():
 
 def db_connect():
     """Connect to the mongodb cloud"""
+    print("Connecting to Database...")
     db_client = pymongo.MongoClient(DATABASE_URL)
     db_name = db_client['RealEstateData']
     db_retrieve_col = db_name['inspections']  # inspections collection, staging db
     db_audits_col = db_name['audits']  # audits collection
     db_agents_col = db_name['agents']  # agents collection
     # TODO change back from temp
-    # db_audits_col = db_name['audits_temp']  # audits collection
-    # db_agents_col = db_name['agents_temp']  # agents collection
+    db_audits_col = db_name['temp_audits']  # audits collection
+    db_agents_col = db_name['temp_agents']  # agents collection
     db_retrieve_col = db_name['temp_inspections']  # inspections collection, staging db
+    print("...Connected")
     return db_client, db_retrieve_col, db_audits_col, db_agents_col
 
 
@@ -53,15 +60,15 @@ def reformat_audits(db_retrieve_col):
                                                   "%Y-%m-%dT%H:%I:%S.%fZ")
         datetime_var = datetime.datetime.strftime(datetime_var, "%Y-%m-%d")
         datetime_var = datetime.datetime.strptime(datetime_var, "%Y-%m-%d")
-
-        # date = datetime_var.date()
-        agent_name = audit["header_items"][2]["responses"]["text"]
-        agent_list.append(agent_name)
         address_lat_long = str(audit["header_items"][3]["responses"]["location_text"]).split("\n")
         address = address_lat_long[0]
         lat_long = address_lat_long[1].split(",")
         lat = lat_long[0].lstrip("(")  # around -19
         long = lat_long[1].strip(")")  # around 146
+
+        # set up unique names for later processing
+        agent_name = audit["header_items"][2]["responses"]["text"]
+        agent_list.append(agent_name)
 
         # create new dictionary
         new_audit_dict = {"audit_id": audit["audit_id"], "agent_name": agent_name, "date": datetime_var,
@@ -76,7 +83,6 @@ def reformat_audits(db_retrieve_col):
     return audit_dict_list, unique_agent_list
 
 
-# TODO create time series data that can work with initial transform. it must find min date and then create array, adding values from each audit that lies on a date for an individual person
 def agent_transform(unique_agents, audit_dict_list, db_agents_col):
     """create the dictionaries that will update/insert in the agents collection"""
     agent_dict_list = []
@@ -121,18 +127,12 @@ def agent_transform(unique_agents, audit_dict_list, db_agents_col):
             for i in range(1, elapsed_time+1):
                 temp_array = []
                 count2 = 0
-
-                # days = datetime.datetime.now() + datetime.timedelta(days=(int(elapsed_time.days) + i))
                 days = datetime.datetime.now()
-
                 days = days-datetime.timedelta(days=(int(elapsed_time)-i))
 
                 # TODO array iterates through but will produce the same result for each run through.
                 for audit in audit_dict_list:
-                    pass
-                    # days = datetime.datetime.now() - datetime.timedelta(days=(int(elapsed_time.days)+i))
-                    #
-
+                    pass  # TODO see wtf is happening here
                     if audit["agent_name"] == agent:
                         if str(audit["date"].date()) == str(days.date()):
                             temp_array.append(float(audit["scores"]["score_percentage"]))
@@ -159,11 +159,12 @@ def agent_transform(unique_agents, audit_dict_list, db_agents_col):
 def write_to_db(db_audits_col, db_agents_col, audit_dict_list, agent_dict_list, all_agents, unique_agents):
     """Takes lists of audits and agents and correctly places them into database"""
     # insert new audits
+    print("Inserting Audits to Database...")
     db_audits_col.insert_many(audit_dict_list)
-
-    print("audits done")
+    print("...Done")
 
     # check condition for agent and take appropriate action
+    print("Processing Agents and Inserting into Database...")
     for agent in unique_agents:
         if agent in all_agents:
             # agent exists and has a new audit
@@ -183,6 +184,7 @@ def write_to_db(db_audits_col, db_agents_col, audit_dict_list, agent_dict_list, 
             time_series[1].append(0)
             db_agents_col.update_one({"agent_name": agent}, time_series)
             print("3")
+    print("..Done")
 
 
 main()
