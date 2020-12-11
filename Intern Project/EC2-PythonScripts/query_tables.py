@@ -2,34 +2,37 @@
 
 import pymongo
 import datetime
-import random
 
 DATABASE_URL = "mongodb+srv://calum_maitland:InternDatabase@cluster0.qg16e.mongodb.net/RealEstateData?retryWrites" \
                "=true&w=majority"
+LOG = open("log.log", "a")
+
 
 def main():
     """main bruh"""
     db_client, db_retrieve_col, db_audits_col, db_agents_col = db_connect()  # setup collections for other functions to use
     try:  # flag may exist in db. If present, exit.
         if not db_retrieve_col.find_one()["audit"]:  # see if flag is in db
-            print("Flag Detected: Exiting...")
+            print("Flag Detected: Exiting", file=LOG)
             exit()
     except KeyError:
-        print("No Flag: Continuing...")
-    print("Moving On")
+        print("No Flag: Continuing", file=LOG)
     audit_dict_list, unique_agents = reformat_audits(db_retrieve_col=db_retrieve_col)
-    agent_dict_list = agent_transform(unique_agents=unique_agents, audit_dict_list=audit_dict_list, db_agents_col=db_agents_col)
+    agent_dict_list = agent_transform(unique_agents=unique_agents, audit_dict_list=audit_dict_list,
+                                      db_agents_col=db_agents_col)
 
     # pull all agents for processing in write_to_db()
     all_agents = db_retrieve_col.find({}, {"_id": 0, "agent_name": 1})
 
     write_to_db(db_audits_col=db_audits_col, db_agents_col=db_agents_col, audit_dict_list=audit_dict_list, agent_dict_list=agent_dict_list, all_agents=all_agents, unique_agents=unique_agents)
     db_client.close()
+    print(datetime.datetime.now(), file=LOG)
+    LOG.close()
 
 
 def db_connect():
     """Connect to the mongodb cloud"""
-    print("Connecting to Database...")
+    print("Connecting to Database...", file=LOG, end='')
     db_client = pymongo.MongoClient(DATABASE_URL)
     db_name = db_client['RealEstateData']
     db_retrieve_col = db_name['inspections']  # inspections collection, staging db
@@ -39,12 +42,13 @@ def db_connect():
     db_audits_col = db_name['temp_audits']  # audits collection
     db_agents_col = db_name['temp_agents']  # agents collection
     db_retrieve_col = db_name['temp_inspections']  # inspections collection, staging db
-    print("...Connected")
+    print("...Done", file=LOG)
     return db_client, db_retrieve_col, db_audits_col, db_agents_col
 
 
 def reformat_audits(db_retrieve_col):
     """find audits from inspection and reformat them"""
+    print("Retrieve and Reformat Audits...", file=LOG, end='')
     audit_dict_list = []
     agent_list = []
 
@@ -80,15 +84,17 @@ def reformat_audits(db_retrieve_col):
     set1 = set(agent_list)
     unique_agent_list = (list(set1))
 
+    print("...Done", file=LOG)
     return audit_dict_list, unique_agent_list
 
 
 def agent_transform(unique_agents, audit_dict_list, db_agents_col):
     """create the dictionaries that will update/insert in the agents collection"""
+    print("Transform Agents...", file=LOG, end='')
     agent_dict_list = []
     date_list = []
 
-    # created in case this is first time transformation TODO maybe change this to avoid wasting processing
+    # created in case this is first time transformation
     for audit in audit_dict_list:
         date_list.append(audit["date"])
     oldest_date = min(date_list)
@@ -96,7 +102,9 @@ def agent_transform(unique_agents, audit_dict_list, db_agents_col):
     for agent in unique_agents:
         # query that uses agent name to retrieve that agent's document
 
-        historical_agent = db_agents_col.find_one({"agent_name": agent}, {"_id": 0, "avg_score": 1, "total_inspection_count": 1, "time_series": 1})
+        historical_agent = db_agents_col.find_one({"agent_name": agent},
+                                                  {"_id": 0, "avg_score": 1, "total_inspection_count": 1,
+                                                   "time_series": 1})
 
         # if agents collection is empty, set default values to prevent exception
         if historical_agent is None:  # if historical_agent is empty, then this script is running in initial transform rather than daily
@@ -124,11 +132,11 @@ def agent_transform(unique_agents, audit_dict_list, db_agents_col):
         if historical_agent is None:
             elapsed_time = int(str((datetime.datetime.now() - oldest_date).days)) + 1
 
-            for i in range(1, elapsed_time+1):
+            for i in range(1, elapsed_time + 1):
                 temp_array = []
                 count2 = 0
                 days = datetime.datetime.now()
-                days = days-datetime.timedelta(days=(int(elapsed_time)-i))
+                days = days - datetime.timedelta(days=(int(elapsed_time) - i))
 
                 # TODO array iterates through but will produce the same result for each run through.
                 for audit in audit_dict_list:
@@ -153,38 +161,40 @@ def agent_transform(unique_agents, audit_dict_list, db_agents_col):
                       "time_series": time_series}
 
         agent_dict_list.append(agent_dict)
+    print("...Done", file=LOG)
     return agent_dict_list
 
 
 def write_to_db(db_audits_col, db_agents_col, audit_dict_list, agent_dict_list, all_agents, unique_agents):
     """Takes lists of audits and agents and correctly places them into database"""
     # insert new audits
-    print("Inserting Audits to Database...")
+    print("Inserting Audits to Database...", file=LOG, end='')
     db_audits_col.insert_many(audit_dict_list)
-    print("...Done")
+    print("...Done", file=LOG)
 
     # check condition for agent and take appropriate action
-    print("Processing Agents and Inserting into Database...")
+    print("Processing Agents and Inserting into Database...", file=LOG, end='')
     for agent in unique_agents:
         if agent in all_agents:
             # agent exists and has a new audit
-            db_agents_col.update_one({"agent_name": agent}, {"avg_score": agent_dict_list["avg_score"], "total_inspection_count": agent_dict_list["total_inspection_count"], "time_series": agent_dict_list["time_series"]})
-            print("1")
+            # db_agents_col.update_one({"agent_name": agent}, {"avg_score": agent_dict_list["avg_score"],
+            #                                                  "total_inspection_count": agent_dict_list[
+            #                                                      "total_inspection_count"],
+            #                                                  "time_series": agent_dict_list["time_series"]})
+            print('1')
         else:
             # agent does not exist and has a new audit
             for agent_dict in agent_dict_list:
                 if agent_dict["agent_name"] == agent:
-                    db_agents_col.insert_one(agent_dict)
-                    print("2")
+                    # db_agents_col.insert_one(agent_dict)
+                    print('2')
     for agent in all_agents:
         if agent not in unique_agents:
             # agent exists but has no new audit
             time_series = db_agents_col.find({"agent_name": agent}, {"time_series": 1})
             time_series[0].append(0.0000)
             time_series[1].append(0)
-            db_agents_col.update_one({"agent_name": agent}, time_series)
-            print("3")
-    print("..Done")
-
-
+            print('3')
+            # db_agents_col.update_one({"agent_name": agent}, time_series)
+    print("...Done", file=LOG)
 main()
