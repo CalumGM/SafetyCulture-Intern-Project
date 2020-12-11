@@ -8,6 +8,6 @@ var auditSchema = mongoose.Schema({
     location: {type:mongoose.Schema.Types.Object, required:false, unique:false},
 });
 
-var Audit = mongoose.model("temp_audits", auditSchema); // collection is named after this with an s chucked on the end
+var Audit = mongoose.model("audits", auditSchema); // collection is named after this with an s chucked on the end
 
 module.exports = Audit;
