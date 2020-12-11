@@ -6,8 +6,16 @@
 <div class="col-md-10"> <!-- RHS column -->
     <!--<h1>Inspections completed by <%= agent_data['agent_name'] %></h1>-->
     <div class="row"> <!-- top row -->
-        <h4># Inspections: <%= agent_data['number_of_inspections']%></h4>
-        <h4>Average Score: <%= agent_data['avg_score']%></h4>
+        <div class="col-md-4">
+            <h4># Inspections: <%= agent_data['number_of_inspections']%></h4>
+            <h4>Average Score: <%= agent_data['avg_score']%></h4>
+        </div>
+        <div class="col-md-4">
+            <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
+        </div>
+        <div class="col-md-4">
+            <h6>3rd column</h6>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-6">
@@ -90,7 +98,30 @@
     }
     
 </script>
-
+<script> // script for date range
+    var start_date;
+    var end_date;
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+    const dateObj = new Date();
+    const month = monthNames.indexOf(dateObj.getMonth());
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const year = dateObj.getFullYear();
+    const output = year + '-' + month + '-' + day;
+    alert(output)
+    $(function() {
+        $('input[name="daterange"]').daterangepicker({
+            dateFormat: "yy-mm-dd",
+            minDate: new Date("2015-10-25"),
+            maxDate: new Date(Date.now()),
+            opens: 'left'
+            }, function(start, end, label) {
+            // start and end are the two dates selected on the GUI
+            start_date = start.format('YYYY-MM-DD');
+            end_date = end.format('YYYY-MM-DD');
+        });
+    });
+</script>
 
 <script> // graph plotting using Chartjs
     // Global Options
