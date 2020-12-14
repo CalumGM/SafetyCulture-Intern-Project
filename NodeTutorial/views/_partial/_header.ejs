@@ -28,8 +28,7 @@
                 <li><a href="#">Welcome, <%= currentUser.username %></a></li>
            <%}%>
            <!-- these hrefs redirect to the routes in home.js, not the view files-->
-           <li><a href="/home">Home</a></li>
-           <li><a href="/about">About</a></li>
+           <li><a href="/">Home</a></li>
            <li><a href="/dashboard">Dashboard</a></li> 
            <% if(currentUser != null) { %>
             <li><a href="/inspections">Inspections</a></li>

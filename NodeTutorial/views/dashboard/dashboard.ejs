@@ -63,7 +63,7 @@
             zoom: 13,
             mapTypeId: "terrain",
         });
-        draw_heatmap([<%- audit_location_data.join()%>]);
+        draw_heatmap([<%- dashboard_data['audit_location_data'].join()%>]);
     }
 
     const draw_heatmap = function(results) {
@@ -92,10 +92,10 @@
     Chart.defaults.global.hover.mode = 'nearest';
 
     agentPerformanceChartData = {
-                labels: [<%- "'"+ agent_names.join("','") + "'" %>],
+                labels: [<%- "'"+ dashboard_data['agent_names'].join("','") + "'" %>],
                 datasets: [{
                     label: '# of Inspections Completed',
-                    data: [<%=agent_totals %>],
+                    data: [<%=dashboard_data['agent_totals'] %>],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -144,10 +144,10 @@
             };
 
     alignmentChartData = {
-                labels: [<%- "'"+ agent_names.join("','") + "'" %>],
+                labels: [<%- "'"+ dashboard_data['agent_names'].join("','") + "'" %>],
                 datasets: [{
                     label: 'Relative Property Score',
-                    data: [<%=agent_rel_scores %>],
+                    data: [<%=dashboard_data['agent_rel_scores'] %>],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -195,10 +195,10 @@
                 }
             };
     lineChartData = {
-                labels: [<%- "'"+ day_labels.join("','") + "'" %>],
+                labels: [<%- "'"+ dashboard_data['day_labels'].join("','") + "'" %>],
                 datasets: [{
                     label: 'Relative Property Score',
-                    data: [<%=daily_audit_count %>],
+                    data: [<%=dashboard_data['daily_audit_count'] %>],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
