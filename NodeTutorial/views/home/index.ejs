@@ -1,25 +1,6 @@
 <%- include('../_partial/_header'); -%>
 
 <h1>Welcome</h1>
-<h6>Root directory. I think node just knows that index.ejs is the root - Yes it does</h6>
-<input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
-
-<script> // script for date range
-    var start_date;
-    var end_date;
-    $(function () {
-        $('input[name="daterange"]').daterangepicker({
-            minDate: "25-10-2000",
-            maxDate: "11-12-2020",
-            opens: 'left'
-        }, function (start, end, label) {
-            // start and end are the two dates selected on the GUI
-            start_date = start.format('YYYY-MM-DD');
-            end_date = end.format('YYYY-MM-DD');
-            alert("A new date selection was made: " + start_date + ' to ' + end_date);
-
-        });
-    });
-</script>
+<h6>Home page... write some stuff</h6>
 
 <%- include ('../_partial/_footer'); -%>

@@ -21,7 +21,7 @@ function prepare_page_data(req, res, date_start, date_end) {
         date_start = new Date('2020-01-01');
         date_end = new Date(Date.now())
     }
-    AuditModel.find({"date":{ $gte:date_start.toISOString(), $lt:date_end.toISOString()}}).exec(function(err, audits) { // find in database
+    AuditModel.find({"date":{ $gte:date_start, $lt:date_end}}).exec(function(err, audits) { // find in database
         if(err){console.log(err);}
 
         var agent_name_to_inspection_count = {}
