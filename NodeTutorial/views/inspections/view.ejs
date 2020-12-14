@@ -58,15 +58,11 @@
     var count = 0;
     
     <% agent_data['GPS_data'].forEach(function(street_location) { %>
-        
         count = count +1;
         var audit_index = <%-agent_data['GPS_data'].indexOf(street_location)%>;
         var address = <%- "'" +  street_location.addr + "'" %>;
         var coordinates = {lat:<%- street_location.lat %>,lng: <%- street_location.long %>}
         var audit_id =  <%- "'" + audits[agent_data['GPS_data'].indexOf(street_location)].audit_id + "'"%>;
-
-
-        
         var marker = new google.maps.Marker({
             position: coordinates,
             map: map,
@@ -89,9 +85,6 @@
                 infowindow.open(map, marker);
             }
         })(marker, audit_index));
-
-        
-       
     <% }) %>
     //console.log(count)
     }
@@ -104,7 +97,7 @@
         console.log(Math.round((second-first)/(1000*60*60*24)))
         return Math.round((second-first)/(1000*60*60*24));
     }
-    const my_num = 5;
+    
     var start_date, end_date;
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"];
@@ -131,14 +124,23 @@
             end_date = end.format('YYYY-MM-DD');
             var start_index = datediff(min_date, start._d);
             var end_index = datediff(min_date, end._d)
-            //update chart
+            var new_stuff = [<%- "'"+ agent_data['day_labels'].join("','") + "'" %>]
+            updateChart(start_index, end_index, agentChart);
+            //update map
             
         });
     });
+    function updateChart(start, end, chart){
+        var new_labels = [<%- "'"+ agent_data['day_labels'].join("','") + "'" %>].slice(start, end);
+        var new_data = [<%- "'"+ agent_data['number_of_audits_per_day'].join("','") + "'" %>].slice(start, end);
+        chart.data.labels = new_labels;
+        chart.data.datasets.data = new_data;
+        chart.update();
+    }
 </script>
 
 <script> // graph plotting using Chartjs
-    
+    const my_num = 5;
     console.log(my_num)
     // Global Options
     var agentCanvasjs = document.getElementById('agentCanvas').getContext('2d');
