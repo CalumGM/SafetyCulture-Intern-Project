@@ -2,7 +2,6 @@
 
 <%- include('../_partial/_select_agent'); -%>
 
-
 <div class="col-md-10"> <!-- RHS column -->
     <!--<h1>Inspections completed by <%= agent_data['agent_name'] %></h1>-->
     <div class="row"> <!-- top row -->
@@ -11,7 +10,7 @@
             <h4>Average Score: <%= agent_data['avg_score']%></h4>
         </div>
         <div class="col-md-4">
-            <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
+            <input type="text" name="daterange" id="daterange"/>
         </div>
         <div class="col-md-4">
             <h6>3rd column</h6>
@@ -94,36 +93,53 @@
         
        
     <% }) %>
-    console.log(count)
+    //console.log(count)
     }
     
 </script>
 <script> // script for date range
-    var start_date;
-    var end_date;
+    function datediff(first, second) {
+        // Take the difference between the dates and divide by milliseconds per day.
+        // Round to nearest whole number to deal with DST.
+        console.log(Math.round((second-first)/(1000*60*60*24)))
+        return Math.round((second-first)/(1000*60*60*24));
+    }
+    const my_num = 5;
+    var start_date, end_date;
     const monthNames = ["January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"];
-    const dateObj = new Date();
-    const month = monthNames.indexOf(dateObj.getMonth());
-    const day = String(dateObj.getDate()).padStart(2, '0');
-    const year = dateObj.getFullYear();
-    const output = year + '-' + month + '-' + day;
-    alert(output)
+    var dateObj = new Date();
+    var month = dateObj.getMonth()+1;
+    var day = String(dateObj.getDate()).padStart(2, '0');
+    var year = dateObj.getFullYear();
+    
+    var current_date = new Date(year + '-' + month + '-' + day);
+    var min_date = new Date();
+    // calculate the minimum date based on the length of the time series data
+    min_date.setTime(current_date.getTime() - 1000*60*60*24* <%= agent_data['number_of_audits_per_day'].length %>);
+    // change text string in HMTL div
+    document.getElementById('daterange').innerHTML = 'test';
     $(function() {
         $('input[name="daterange"]').daterangepicker({
             dateFormat: "yy-mm-dd",
-            minDate: new Date("2015-10-25"),
-            maxDate: new Date(Date.now()),
+            minDate: new Date(min_date),
+            maxDate: new Date(current_date),
             opens: 'left'
             }, function(start, end, label) {
             // start and end are the two dates selected on the GUI
-            start_date = start.format('YYYY-MM-DD');
+            start_date = start.format('YYYY-MM-DD'); // moment object
             end_date = end.format('YYYY-MM-DD');
+            var start_index = datediff(min_date, start._d);
+            var end_index = datediff(min_date, end._d)
+            //update chart
+            
         });
     });
 </script>
 
 <script> // graph plotting using Chartjs
+    
+    console.log(my_num)
     // Global Options
     var agentCanvasjs = document.getElementById('agentCanvas').getContext('2d');
 
