@@ -94,7 +94,7 @@ def retrieve_audit_data(audit_list):
     for x in enumerate(audit_list):
         if (x[0]+1) % 101 == 0:  # maybe make this into 100 to slightly speed up
             timer = datetime.datetime.now() - timer
-            sleep_time = round(60 - timer.total_seconds())+1
+            sleep_time = round(60 - timer.total_seconds())+2
             print("\n\tLimiting Rate - Sleep: ", sleep_time, " seconds\n\t", file=LOG, end='')
             time.sleep(sleep_time)
             timer = datetime.datetime.now()
