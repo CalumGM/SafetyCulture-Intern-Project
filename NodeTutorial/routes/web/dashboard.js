@@ -2,6 +2,7 @@ var express = require("express");
 var passport = require("passport");
 var ensureAuthenticated = require("../../auth/auth").ensureAuthenticated;
 var AuditModel = require("../../models/audits");;
+var DEFAULT_DATE
 
 function sum(obj) {
     var sum = 0;
@@ -9,14 +10,18 @@ function sum(obj) {
       if(obj.hasOwnProperty(elem)) sum += parseFloat(obj[elem]);
     }
     return sum;
-}
+};
 
-var router = express.Router();
-router.use(ensureAuthenticated);// ensures that all routes in this route are now authenticated
-
-// how do I talk to the routes in this page??
-router.get("/", function(req, res){ // implicit /post before each of these routes
-    AuditModel.find({}).exec(function(err, audits) { // find in database
+function prepare_page_data(req, res, date_start, date_end) {
+    var dashboard_data = {};
+    if (date_start != false) {
+        date_start = new Date(date_start);
+        date_end = new Date(date_end);
+    } else {
+        date_start = new Date('2020-01-01');
+        date_end = new Date(Date.now())
+    }
+    AuditModel.find({"date":{ $gte:date_start.toISOString(), $lt:date_end.toISOString()}}).exec(function(err, audits) { // find in database
         if(err){console.log(err);}
 
         var agent_name_to_inspection_count = {}
@@ -29,12 +34,8 @@ router.get("/", function(req, res){ // implicit /post before each of these route
         var audit_location_data = []
 
         audits.forEach(audit => {
-            if (audit_location_data.length < 20) {
-                audit_location_data.push('['+audit.location.lat+","+audit.location.long+']');
-                if (audit_location_data.length == 20) {
-                    ']'
-                }
-            }
+            audit_location_data.push('['+audit.location.lat+","+audit.location.long+']');
+            
             // Create Agent_Dictionaries
             // Create Agent Name List
             if (audit.agent_name in agent_name_to_inspection_count) {
@@ -88,12 +89,25 @@ router.get("/", function(req, res){ // implicit /post before each of these route
                 daily_audit_data.push(parseFloat(daily_audit_count[key]));
             }
         };
-
+        dashboard_data = {'agent_totals': agent_audit_totals, 'agent_names': agent_names, 'agent_rel_scores': agent_name_to_total_score, 'day_labels': day_labels, 'daily_audit_count': daily_audit_data, 'audit_location_data': audit_location_data};
         res.render(
             "dashboard/dashboard", 
-            {agent_totals:agent_audit_totals, agent_names: agent_names, agent_rel_scores: agent_name_to_total_score, day_labels: day_labels, daily_audit_count: daily_audit_data, audit_location_data: audit_location_data}
+            {dashboard_data}
         );
     });
- });
+    
+};
+
+var router = express.Router();
+// router.use(ensureAuthenticated);// ensures that all routes in this route are now authenticated
+
+// how do I talk to the routes in this page??
+router.get("/", function(req, res){ // implicit /post before each of these routes
+    prepare_page_data(req,res, false, false)
+});
+
+router.get('/:start/:end', function (req, res) { // Allows /YYYY-MM-DD/YYYY-MM-DD formatting for start/end date of data.
+    prepare_page_data(req,res, req.params['start'],req.params['end'])
+});
 
  module.exports = router;
