@@ -194,11 +194,13 @@ def write_to_db(db_audits_col, db_agents_col, audit_dict_list, agent_dict_list, 
             db_agents_col.insert_one(agent_dict)
 
     for agent in all_agents:
-        if agent not in unique_agents:  # TODO must append to stuff on db. can try to use find but may become too resource intensive
+        if agent not in unique_agents:
             print("they are in database but no audit")
-            agent_dict['time_series'][0].append(0.0000)
+            agent_dict = db_agents_col.find_one({"agent_name": agent}, {"_id": 0, "time_series": 1})
+            print(agent_dict)
+            agent_dict['time_series'][0].append(0.0)
             agent_dict['time_series'][1].append(0)
+            print(agent_dict)
             db_agents_col.update_one({"agent_name": agent}, {"time_series": agent_dict["time_series"]})
 
     print("...Done", file=LOG)
-main()  # TODO remove dis
