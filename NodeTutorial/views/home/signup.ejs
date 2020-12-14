@@ -1,5 +1,5 @@
 <%- include('../_partial/_header'); -%>
-<div class="col-md-8">
+<div class="col-8">
 
     <div class="panel panel-default">
 
@@ -8,32 +8,23 @@
         </div>
         <div class="panel-body">
             <form class="form-signin" method="POST" action="/signup">
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">@</span>
-                    <input type="text" class="form-control" placeholder="Username" name="username" aria-describedby="basic-addon1">
-                </div>
-                <br />
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">@</span>
-                    <input type="email" class="form-control" placeholder="Email address" name="email"
-                        aria-describedby="basic-addon1">
-                </div>
-                <br />
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-lock"
-                            aria-hidden="true"></span></span>
-                    <input type="password" name="password" class="form-control" placeholder="Password" aria-describedby="basic-addon1">
-                </div>
-                <br />
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-lock"
-                            aria-hidden="true"></span></span>
-                    <input type="password" class="form-control" placeholder="Re-password"
-                        aria-describedby="basic-addon1" name="repassword">
-                </div>
-
-                <input type="submit" class="btn btn-default navbar-btn" value="Sign Up" />
-
+                <div class="form-floating">
+                    <input type="input-group-text" class="form-control" id="basic-addon1" placeholder="myUserName">
+                    <label for="floatingInput">Username</label>
+                </div><br/>
+                <div class="form-floating">
+                    <input type="email" class="form-control" id="basic-addon1" placeholder="name@example.com">
+                    <label for="floatingInput">Email address</label>
+                </div><br/>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="basic-addon1" placeholder="Password">
+                    <label for="floatingPassword">Password</label>
+                </div><br/>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="basic-addon1" placeholder="Re-password">
+                    <label for="floatingPassword">Re-password</label>
+                </div><br/>
+                <input type="submit" class="btn btn-primary" value="Sign Up" />
             </form>
         </div>
     </div>
