@@ -99,9 +99,8 @@ function prepare_page_data(req, res, date_start, date_end) {
 };
 
 var router = express.Router();
-// router.use(ensureAuthenticated);// ensures that all routes in this route are now authenticated
+router.use(ensureAuthenticated);// ensures that all routes in this route are now authenticated
 
-// how do I talk to the routes in this page??
 router.get("/", function(req, res){ // implicit /post before each of these routes
     prepare_page_data(req,res, false, false)
 });
