@@ -52,6 +52,7 @@ def db_connect():
     db_audits_col = db_name['temp_audits']  # audits collection
     db_agents_col = db_name['temp_agents']  # agents collection
     db_retrieve_col = db_name['temp_inspections']  # inspections collection, staging db
+
     print("...Done", file=LOG)
     return db_client, db_retrieve_col, db_audits_col, db_agents_col
 
@@ -150,7 +151,7 @@ def agent_transform(unique_agents, audit_dict_list, db_agents_col):
                 days = datetime.datetime.now()
                 days = days - datetime.timedelta(days=(int(elapsed_time) - i))
 
-                for audit in audit_dict_list:  # TODO hefty run time... try to smooth
+                for audit in audit_dict_list:
                     if audit["agent_name"] == agent:
                         if str(audit["date"].date()) == str(days.date()):
                             temp_array.append(float(audit["scores"]["score_percentage"]))
@@ -187,20 +188,18 @@ def write_to_db(db_audits_col, db_agents_col, audit_dict_list, agent_dict_list, 
 
     for agent_dict in agent_dict_list:
         if agent_dict["agent_name"] in all_agents:  # exists and has report
-            print("they are in database and have new audit")
+            print("Old User, New Audit", file=LOG)
             db_agents_col.update_one({"agent_name": agent_dict["agent_name"]}, {"$set": {"avg_score": agent_dict["avg_score"], "total_inspection_count": agent_dict["total_inspection_count"], "time_series": agent_dict["time_series"]}})
         else:  # doesnt exist, had report
-            print("they are not in the database and have new report")
+            print("New User, New Audit", file=LOG)
             db_agents_col.insert_one(agent_dict)
 
     for agent in all_agents:
         if agent not in unique_agents:
-            print("they are in database but no audit")
+            print("Old User, No Report", file=LOG)
             agent_dict = db_agents_col.find_one({"agent_name": agent}, {"_id": 0, "time_series": 1})
-            print(agent_dict)
             agent_dict['time_series'][0].append(0.0)
             agent_dict['time_series'][1].append(0)
-            print(agent_dict)
             db_agents_col.update_one({"agent_name": agent}, {"time_series": agent_dict["time_series"]})
 
     print("...Done", file=LOG)
