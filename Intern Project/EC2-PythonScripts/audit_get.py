@@ -35,6 +35,7 @@ def main():
     print(datetime.datetime.now(), file=LOG)
     authenticate()
     db_client, db_col = db_connect()
+
     x = int(db_col.estimated_document_count())
     if x > 0:  # if db has documents
         # execute code that adds all new audits
@@ -42,6 +43,7 @@ def main():
     else:  # x == 0
         # execute code that adds all audits
         url = TEMPLATE_SEARCH_URL
+
     audit_list = retrieve_audit_ids(url)
     responses = retrieve_audit_data(audit_list)
     write_to_db(db_col, responses)
@@ -90,9 +92,9 @@ def retrieve_audit_data(audit_list):
     responses = []
     timer = datetime.datetime.now()
     for x in enumerate(audit_list):
-        if (x[0]+1) % 90 == 0:  # maybe make this into 100 to slightly speed up
+        if (x[0]+1) % 101 == 0:  # maybe make this into 100 to slightly speed up
             timer = datetime.datetime.now() - timer
-            sleep_time = round(60 - timer.total_seconds())+1
+            sleep_time = round(60 - timer.total_seconds())+2
             print("\n\tLimiting Rate - Sleep: ", sleep_time, " seconds\n\t", file=LOG, end='')
             time.sleep(sleep_time)
             timer = datetime.datetime.now()
@@ -103,7 +105,7 @@ def retrieve_audit_data(audit_list):
 
         # a multiple of 15 since only 15 request per batch are allowed, skip first one since it will be empty,
         # also execute on last iteration of loop
-        if (((x[0])+1) % 15 == 0) & (x[0] != 0) | (x[0] == len(audit_list) - 1):
+        if (((x[0])+1) % 15 == 0) & (x[0] != 0) | (x[0] == len(audit_list) - 1) | ((x[0] + 1) % 100 == 0):
             print(f"{(x[0] + 1.00) / len(audit_list) * 100 :.2f}%", file=LOG, end=",")  # percentage of completion
             batch = requests.post("https://sandpit-api.safetyculture.io/batch", headers=headers, data='{"requests": [' + ', '.join(batch_requests) + ']}')
             responses += batch.json()

@@ -1,41 +1,27 @@
 <%- include('../_partial/_header'); -%>
-<div class="col-md-8">
-
-    <div class="panel panel-default">
-
-        <div class="panel-heading">
-            <h3>Sign Up</h3>
-        </div>
-        <div class="panel-body">
-            <form class="form-signin" method="POST" action="/signup">
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">@</span>
-                    <input type="text" class="form-control" placeholder="Username" name="username" aria-describedby="basic-addon1">
-                </div>
-                <br />
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">@</span>
-                    <input type="email" class="form-control" placeholder="Email address" name="email"
-                        aria-describedby="basic-addon1">
-                </div>
-                <br />
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-lock"
-                            aria-hidden="true"></span></span>
-                    <input type="password" name="password" class="form-control" placeholder="Password" aria-describedby="basic-addon1">
-                </div>
-                <br />
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1"><span class="glyphicon glyphicon-lock"
-                            aria-hidden="true"></span></span>
-                    <input type="password" class="form-control" placeholder="Re-password"
-                        aria-describedby="basic-addon1" name="repassword">
-                </div>
-
-                <input type="submit" class="btn btn-default navbar-btn" value="Sign Up" />
-
-            </form>
-        </div>
+<div class="col-md-6 offset-md-3"> 
+    <div class="container col-md-12" style="margin: 1em 0em 1em 0em; min-height: 500px;">
+        <h1 >Create Account</h1>
+        <br/>
+        <form class="form-signin" method="POST" action="/signup">
+            <div class="form-floating">
+                <input type="input-group-text" class="form-control" id="basic-addon1" name="username" placeholder="myUserName">
+                <label for="floatingInput">Username</label>
+            </div><br/>
+            <div class="form-floating">
+                <input type="email" class="form-control" id="basic-addon1" name="email" placeholder="name@example.com">
+                <label for="floatingInput">Email address</label>
+            </div><br/>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="basic-addon1" name="password" placeholder="Password">
+                <label for="floatingPassword">Password</label>
+            </div><br/>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="basic-addon1" name="repassword" placeholder="Re-password">
+                <label for="floatingPassword">Re-password</label>
+            </div><br/>
+            <input type="submit" class="btn btn-primary" value="Sign Up" />
+        </form>
     </div>
 </div>
 

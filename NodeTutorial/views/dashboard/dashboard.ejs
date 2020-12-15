@@ -1,17 +1,7 @@
 <head>
     <style type="text/css">
-        /* Always set the map height explicitly to define the size of the div
-         * element that contains the map. */
         #map {
           height: 100%;
-        }
-    
-        /* Optional: Makes the sample page fill the window. */
-        html,
-        body {
-          height: 250px;
-          margin: 0;
-          padding: 0;
         }
     </style>
     <script src ="https://polyfill.io/v3/polyfill.min.js?features=default" ></script>
@@ -19,40 +9,41 @@
 </head>
 <%- include('../_partial/_header'); -%>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-12">
         <h1>Data overview</h1>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6" style="margin-bottom:10px;">
+    <div class="col" style="margin-bottom:10px;">
         <!-- <a href="/posts/add" type="button" class="btn btn-default">New Post</a> -->
         <!-- <a href="/posts/view" type="button" class="btn btn-default">View Audits</a> -->
     </div>
 </div>
-<div class="col-sm-12 col-md-12">
-    <div class="col-sm-12 col-md-6">
+<div class="row">
+    <div class="col-6">
         <div class="agent_performance">
             <canvas id="agent_performance_chart"></canvas>
         </div>
     </div>
-    <div class="col-sm-12 col-md-6">
+    <div class="col-6">
         <div class="team_performance">
             <canvas id="team_performance_chart"></canvas>
         </div>
     </div>
-    <div class="col-sm-12 col-md-6">
+</div>
+<div class="row">
+    <div class="col-6">
         <div class="agent_alignment">
             <canvas id="agent_alignment_chart"></canvas>
         </div>
     </div>
-    <div class="col-sm-12 col-md-6">
+    <div class="col-6">
         <div class="team_hotspots">
             <div id="map"></div>
             </p>
         </div>
     </div>
-
 </div>
 <script>
     let map;
@@ -195,7 +186,7 @@
                 }
             };
     lineChartData = {
-                labels: [<%- "'"+ dashboard_data['day_labels'].join("','") + "'" %>],
+                labels: [<%- "'"+ dashboard_data['day_labels'].join("','") + "'" %>], 
                 datasets: [{
                     label: 'Relative Property Score',
                     data: [<%=dashboard_data['daily_audit_count'] %>],
