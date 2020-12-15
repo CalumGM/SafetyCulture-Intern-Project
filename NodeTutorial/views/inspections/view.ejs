@@ -44,9 +44,10 @@
     }
 </style>
 <script> // map script
+    // redefine agent data to mutable variables
     // Initialize and add the map
+    
     function initMap() {
-
     // The location of Townsville
     const townsville = { lat: -19.288, lng: 146.763 };
     // The map, centered at Townsville
@@ -60,9 +61,8 @@
     <% agent_data['GPS_data'].forEach(function(street_location) { %>
         count = count +1;
         var audit_index = <%-agent_data['GPS_data'].indexOf(street_location)%>;
-        var address = <%- "'" +  street_location.addr + "'" %>;
-        var coordinates = {lat:<%- street_location.lat %>,lng: <%- street_location.long %>}
-        var audit_id =  <%- "'" + audits[agent_data['GPS_data'].indexOf(street_location)].audit_id + "'"%>;
+        var address = <%- "'" +  street_location[2] + "'" %>;
+        var coordinates = {lat:<%- street_location[1] %>,lng: <%- street_location[0] %>}
         var marker = new google.maps.Marker({
             position: coordinates,
             map: map,
@@ -72,21 +72,14 @@
             content: address,
         });
         //infowindow.open(map, marker);
-        google.maps.event.addListener(map, 'click', (function(infowindow) {
-            return function() {
-                infowindow.close();
-            }
-        })(infowindow));
 
-        google.maps.event.addListener(marker, 'click', (function(marker, audit_index) {
+        google.maps.event.addListener(marker, 'click', (function(marker, audit_index, infowindow) {
             return function() {
-                var contentString = address;
-                infowindow.setContent(contentString);
+                infowindow.setContent(address);
                 infowindow.open(map, marker);
             }
-        })(marker, audit_index));
+        })(marker, audit_index, infowindow));
     <% }) %>
-    //console.log(count)
     }
     
 </script>
@@ -94,7 +87,6 @@
     function datediff(first, second) {
         // Take the difference between the dates and divide by milliseconds per day.
         // Round to nearest whole number to deal with DST.
-        console.log(Math.round((second-first)/(1000*60*60*24)))
         return Math.round((second-first)/(1000*60*60*24));
     }
     
@@ -106,7 +98,11 @@
     var day = String(dateObj.getDate()).padStart(2, '0');
     var year = dateObj.getFullYear();
     
-    var current_date = new Date(year + '-' + month + '-' + day);
+    //var current_date = new Date(year + '-' + month + '-' + day);
+    var current_date = new Date();
+    current_date.setMonth(11);
+    current_date.setDate(9);
+    current_date.setFullYear(2020);
     var min_date = new Date();
     // calculate the minimum date based on the length of the time series data
     min_date.setTime(current_date.getTime() - 1000*60*60*24* <%= agent_data['number_of_audits_per_day'].length %>);
@@ -126,8 +122,8 @@
             var end_index = datediff(min_date, end._d)
             var new_stuff = [<%- "'"+ agent_data['day_labels'].join("','") + "'" %>]
             updateChart(start_index, end_index, agentChart);
+            updateMap(start_index, end_index);
             //update map
-            
         });
     });
     function updateChart(start, end, chart){
@@ -137,11 +133,28 @@
         chart.data.datasets.data = new_data;
         chart.update();
     }
+    function updateMap(start, end){
+        // slice the data that the map uses.
+
+        // GPS data is sorted by date
+        // sum the time series up until start
+        var start_count = 0;
+        var before_selected = [<%- "'"+ agent_data['number_of_audits_per_day'].join("','") + "'" %>].slice(0, start)
+        for (var i = 0; i < before_selected.length; i++ ){
+            start_count += parseInt(before_selected[i], 10);
+        }
+        // sum the time series up until end
+        var end_count = 1; // end starts at one to avoid edge case
+        var after_selected = [<%- "'"+ agent_data['number_of_audits_per_day'].join("','") + "'" %>].slice(0, end)
+        for (var i = 0; i < after_selected.length; i++ ){
+            end_count += parseInt(after_selected[i], 10);
+        }
+        var full_GPS = <%-"'"+agent_data['GPS_data']+"'"%>
+        initMap()
+    }
 </script>
 
 <script> // graph plotting using Chartjs
-    const my_num = 5;
-    console.log(my_num)
     // Global Options
     var agentCanvasjs = document.getElementById('agentCanvas').getContext('2d');
 

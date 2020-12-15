@@ -18,7 +18,8 @@ router.get("/", function(req, res){ // implicit /post before each of these route
  });
 
 router.get("/:agent_name", function(req,res){ // :postID represents a variable parameter as a route
-    Audit.find({agent_name:req.params.agent_name}).exec(function(err, audits){ // find all audits done by a particular agent
+    // find all audits done by a particular agent and sort by date accending
+    Audit.find({agent_name:req.params.agent_name}).sort({date: 1}).exec(function(err, audits){ 
         if(err){console.log(err);}
         // do all calcs in here. Yes, because backend does all the heavy lifting
         var agent_data = {};
@@ -54,23 +55,17 @@ router.get("/:agent_name", function(req,res){ // :postID represents a variable p
         for (i = 0; i<audits.length; i++){
             var long = audits[i]['location']['long']; 
             var lat = audits[i]['location']['lat'];
-            var addr = audits[i]['location']['text'];
-            audit_GPS_data[i] = {long, lat, addr};
+            var addr = audits[i]['location']['text'].replace(/,/g, "-"); // turn , into -
+            audit_GPS_data[i] = [long, lat,  addr];
         }
         
         agent_data['GPS_data'] = audit_GPS_data;
-        //console.log('audit_GPS_data', audit_GPS_data);
+        console.log('audit_GPS_data', JSON.stringify(agent_data['GPS_data']));
         agent_data['day_labels'] = day_labels;
         agent_data['number_of_audits_per_day'] = agent.time_series[1];
         agent_data['audit_score_per_day'] = agent.time_series[0];
-        // if (audits.length === agent.time_series[1].length){
-        //     console.log('yay');
-        // } else {
-        //     console.log('audits length:',audits.length);
-        //     console.log('time series length', agent.time_series[1].length)
-        // }
 
-        res.render("inspections/view",{audits:audits, agent_data:agent_data, agents:found_agents});
+        res.render("inspections/view",{audits:audits, agent_data:JSON.stringify(agent_data), agents:found_agents});
     });
 });
 
