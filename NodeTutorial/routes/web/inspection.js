@@ -5,7 +5,7 @@ var passport = require("passport");
 var Audit = require("../../models/audits");
 var Agent = require("../../models/agents");
 var router = express.Router();
-//router.use(ensureAuthenticated);// ensures that all routes in this route are now authenticated
+router.use(ensureAuthenticated);// ensures that all routes in this route are now authenticated
 var found_agents;
 var agent;
 // how do I talk to the routes in this page??
