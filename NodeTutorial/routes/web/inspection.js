@@ -60,7 +60,7 @@ router.get("/:agent_name", function(req,res){ // :postID represents a variable p
         }
         
         agent_data['GPS_data'] = audit_GPS_data;
-        console.log('audit_GPS_data', JSON.stringify(agent_data['GPS_data']));
+        //console.log('audit_GPS_data', JSON.stringify(agent_data['GPS_data']));
         agent_data['day_labels'] = day_labels;
         agent_data['number_of_audits_per_day'] = agent.time_series[1];
         agent_data['audit_score_per_day'] = agent.time_series[0];
