@@ -6,6 +6,7 @@ import pymongo
 import requests
 import datetime
 import time
+import sys
 
 # helps start second script
 from query_tables import main as q_main
@@ -26,8 +27,12 @@ TEMPLATE_SEARCH_URL = f"https://sandpit-api.safetyculture.io/audits/search?order
 # DB Constant
 DATABASE_URL = "mongodb+srv://calum_maitland:InternDatabase@cluster0.qg16e.mongodb.net/RealEstateData?retryWrites=true&w=majority"
 
-# Log file Constant
-LOG = open("log.log", "a")
+# Log file Constant, with debug condition
+DEBUG = False
+if DEBUG:
+    LOG = sys.stdout
+else:
+    LOG = open("log.log", "a")
 
 
 def main():
@@ -91,25 +96,28 @@ def retrieve_audit_data(audit_list):
     batch_requests = []
     responses = []
     timer = datetime.datetime.now()
-    for x in enumerate(audit_list):
-        if (x[0]+1) % 101 == 0:  # maybe make this into 100 to slightly speed up
+
+    for count, audit in enumerate(audit_list):
+        audit_id = audit['audit_id']
+        audit_url = '/audits/' + audit_id
+        batch_requests.append('{"method": "get", "path": "' + audit_url + '"}')
+
+        # submit a batch request when there have been 15 ids added to requests list or
+        # when the final id in the list is reached or
+        # when 100 iterations have been made
+        if ((count+1) % 15 == 0) | (count+1 == len(audit_list)) | ((count+1) % 100 == 0):
+            print(f"{(count + 1.00) / len(audit_list) * 100 :.2f}%", file=LOG, end=",")  # percentage of completion
+            batch = requests.post("https://sandpit-api.safetyculture.io/batch", headers=headers, data='{"requests": [' + ', '.join(batch_requests) + ']}')
+            responses += batch.json()
+            batch_requests.clear()
+
+        # sleep only after 100 iterations have occurred
+        if (count + 1) % 100 == 0:
             timer = datetime.datetime.now() - timer
             sleep_time = round(60 - timer.total_seconds())+2
             print("\n\tLimiting Rate - Sleep: ", sleep_time, " seconds\n\t", file=LOG, end='')
             time.sleep(sleep_time)
             timer = datetime.datetime.now()
-
-        audit_id = x[1]['audit_id']
-        audit_url = '/audits/' + audit_id
-        batch_requests.append('{"method": "get", "path": "' + audit_url + '"}')
-
-        # a multiple of 15 since only 15 request per batch are allowed, skip first one since it will be empty,
-        # also execute on last iteration of loop
-        if (((x[0])+1) % 15 == 0) & (x[0] != 0) | (x[0] == len(audit_list) - 1) | ((x[0] + 1) % 100 == 0):
-            print(f"{(x[0] + 1.00) / len(audit_list) * 100 :.2f}%", file=LOG, end=",")  # percentage of completion
-            batch = requests.post("https://sandpit-api.safetyculture.io/batch", headers=headers, data='{"requests": [' + ', '.join(batch_requests) + ']}')
-            responses += batch.json()
-            batch_requests.clear()
 
     print("\n\tRequested Audits Length: " + str(len(responses)), file=LOG)
     print("\tLength of Audit List: " + str(len(audit_list)), file=LOG)
@@ -154,10 +162,7 @@ def write_to_db(db_col, responses):
     """Takes list of audits and puts them into database"""
     db_col.drop()  # erase collection so that next script doesnt get confused, poor baby
     print("Inserting into Database...", file=LOG, end='')
-    # for audit in responses:
-    #     dbEntry = audit
-    #     db_col.insert_one(dbEntry)
-    db_col.insert_many(responses)  # TODO test this code under complete conditions
+    db_col.insert_many(responses)
     print("...Done\n", file=LOG)
 
 
