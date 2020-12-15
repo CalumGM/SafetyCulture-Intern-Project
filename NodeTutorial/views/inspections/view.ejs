@@ -1,18 +1,12 @@
 <%- include('../_partial/_header'); -%>
 
 <%- include('../_partial/_select_agent'); -%>
-<script>
-     <% var agent_dataJSON =JSON.parse(agent_data)%> // convert JSON stringify back into an object
-     var hopethisworks = JSON.parse(<%-"'"+agent_data+"'"%>)
-     console.log(hopethisworks)
-    //<%-console.log(agent_dataJSON)%>
-</script>
+
 <div class="col-md-10"> <!-- RHS column -->
-    <!--<h1>Inspections completed by <%= agent_dataJSON['agent_name'] %></h1>-->
     <div class="row"> <!-- top row -->
         <div class="col-md-4">
-            <h4># Inspections: <%= agent_dataJSON['number_of_inspections']%></h4>
-            <h4>Average Score: <%= agent_dataJSON['avg_score']%></h4>
+            <h4 id="number_of_inspections_label"># Inspections: </h4>
+            <h4 id="average_score_label">Average Score: </h4>
         </div>
         <div class="col-md-4">
             <input type="text" name="daterange" id="daterange"/>
@@ -36,7 +30,13 @@
 
 </div>
 </div> <!-- ends the row div, place columns above this-->
+<script>
+    <% var agent_dataJSON =JSON.parse(agent_data)%>; // convert JSON stringify back into an object
+    var hopethisworks = JSON.parse(<%-"'"+agent_data+"'"%>)
+    document.getElementById("number_of_inspections_label").innerHTML ="# Inspections: " + hopethisworks['number_of_inspections'];
+    document.getElementById("average_score_label").innerHTML = "Average Score: " + hopethisworks['avg_score'];
 
+</script>
 <!-- Google maps plotting-->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAH_H9EYGbVq07pReSI_32NAh1iODKDyno&callback=initMap&libraries=&v=weekly"defer></script>
 <style type="text/css">
