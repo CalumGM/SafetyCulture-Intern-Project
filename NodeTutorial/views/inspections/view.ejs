@@ -6,13 +6,13 @@
     <div class="row"> <!-- top row -->
         <div class="col-md-4">
             <h4 id="number_of_inspections_label"># Inspections: </h4>
+        </div>
+        <div class="col-md-4">
             <h4 id="average_score_label">Average Score: </h4>
         </div>
         <div class="col-md-4">
             <input type="text" name="daterange" id="daterange"/>
-        </div>
-        <div class="col-md-4">
-            <h6>3rd column</h6>
+
         </div>
     </div>
     <div class="row">
@@ -21,7 +21,8 @@
         </div>
 
         <div class="col-md-6">
-            <h4><div id="map"></div></h4>
+            <h4 id="map_title">Map of [name] inspections</h4>
+            <div id="map"></div>
         </div>
     </div>
     <row>
@@ -34,6 +35,7 @@
     var agent_dataJSON = JSON.parse(<%-"'"+agent_data+"'"%>)
     document.getElementById("number_of_inspections_label").innerHTML ="# Inspections: " + agent_dataJSON['number_of_inspections'];
     document.getElementById("average_score_label").innerHTML = "Average Score: " + agent_dataJSON['avg_score'];
+    document.getElementById("map_title").innerHTML = "Map of " + agent_dataJSON['agent_name'] + "'s Inspections"
 
 </script>
 <!-- Google maps plotting-->
@@ -103,10 +105,6 @@
     var year = dateObj.getFullYear();
     
     var current_date = new Date(year + '-' + month + '-' + day);
-    // var current_date = new Date();
-    // current_date.setMonth(11);
-    // current_date.setDate(9);
-    // current_date.setFullYear(2020);
     var min_date = new Date();
     // calculate the minimum date based on the length of the time series data
     min_date.setTime(current_date.getTime() - 1000*60*60*24* agent_dataJSON['number_of_audits_per_day'].length);
@@ -125,33 +123,52 @@
             var start_index = datediff(min_date, start._d);
             var end_index = datediff(min_date, end._d)
             var new_stuff = ["'"+ agent_dataJSON['day_labels'].join("','") + "'"]
+            updateLabels(start_index, end_index)
             updateChart(start_index, end_index, agentChart);
             updateMap(start_index, end_index);
             //update map
         });
     });
-    var number_of_inspections_shown;
-    var average_score_of_inpsections_shown;
-    function updateChart(start, end, chart){
-        //console.log(agent_dataJSON['day_labels'].slice(start, end))
-        //console.log(agent_dataJSON['number_of_audits_per_day'].slice(start, end))
-        // there are some date missmatches in this, but that will be fixed with proper data
+    
 
+    function removeElementsWithValue(arr, val) {
+        // removes all of the elements containing 'val' within the array 'arr'
+        var i = arr.length;
+            while (i--) {
+                if (arr[i] === val) {
+                    arr.splice(i, 1);
+                }
+            }
+        return arr;
+    }  
+
+    function updateLabels(start, end){
+        var number_of_inspections_shown;
+        var average_score_of_inpsections_shown;
+        var temp_audit_score_per_day = [];
+        // make a copy of audit_score_per_day without referencing the same object
+        for (item in agent_dataJSON['audit_score_per_day']){
+            temp_audit_score_per_day[item] = agent_dataJSON['audit_score_per_day'][item];
+        }
+        var audit_scores_without_zeros = removeElementsWithValue(temp_audit_score_per_day, 0).slice(start, end);
         number_of_inspections_shown = agent_dataJSON['number_of_audits_per_day'].slice(start, end).reduce((a, b) => a + b, 0);
-        average_score_of_inpsections_shown = (agent_dataJSON['audit_score_per_day'].slice(start, end).reduce((a, b) => a + b, 0))/number_of_inspections_shown;
+        average_score_of_inpsections_shown = (audit_scores_without_zeros.reduce((a, b) => a + b, 0))/audit_scores_without_zeros.length;
+        // update the HTML text
         document.getElementById("number_of_inspections_label").innerHTML ="# Inspections: " + number_of_inspections_shown;
-        document.getElementById("average_score_label").innerHTML = "Average Score: " + average_score_of_inpsections_shown;
+        document.getElementById("average_score_label").innerHTML = "Average Score: " + average_score_of_inpsections_shown.toFixed(2);
+    }
 
-
-
-
+    function updateChart(start, end, chart){
         var new_labels = agent_dataJSON['day_labels'].slice(start, end);
-        var new_data = agent_dataJSON['number_of_audits_per_day'].slice(start, end);
+        var new_number_of_inspections_data = agent_dataJSON['number_of_audits_per_day'].slice(start, end);
+        var new_average_audit_score_data = agent_dataJSON['audit_score_per_day'].slice(start, end)
         chart.data.labels = new_labels;
-        chart.data.datasets[0].data = new_data;
-        // add another axis here for average score for that day
+        chart.data.datasets[0].data = new_number_of_inspections_data;
+        chart.data.datasets[1].data = new_average_audit_score_data;
+        // TODO: add another axis here for average score for that day
         chart.update();
     }
+
     function updateMap(start, end){
         // slice the data that the map uses.
 
@@ -162,7 +179,6 @@
         for (var i = 0; i < before_selected.length; i++ ){
             start_count += parseInt(before_selected[i], 10);
         }
-        //console.log('before', before_selected)
 
         // sum the time series up until end
         var end_count = 0; // end starts at one to avoid edge case
@@ -170,16 +186,15 @@
         for (var i = 0; i < after_selected.length; i++ ){
             end_count += parseInt(after_selected[i], 10);
         }
-        //console.log('after', after_selected)
         GPS_data = agent_dataJSON['GPS_data'].slice(start_count, end_count)
         initMap()
     }
 </script>
 
 <script> // graph plotting using Chartjs
-    // Global Options
     var agentCanvasjs = document.getElementById('agentCanvas').getContext('2d');
-
+    
+    // Global Options
     Chart.defaults.global.defaultFontFamily.Chart = 'Lato';
     Chart.defaults.global.defaultFontSize.Chart = 18;
     Chart.defaults.global.defaultFontColor.Chart = '#000';
@@ -189,10 +204,21 @@
                 labels: agent_dataJSON['day_labels'],
                 datasets: [{
                 label: '# of Inspections by ' + agent_dataJSON['agent_name'] ,
+                yAxisID: 'number_of_audits',
                 data: agent_dataJSON['number_of_audits_per_day'],
                 backgroundColor:'rgba(255, 99, 132, 0.2)',
                 borderColor:'rgba(255, 99, 132, 1)',
                 borderWidth: 1
+                }, 
+                {
+                label: 'Average Inspcetion Score' ,
+                yAxisID: 'average_score',
+                data: agent_dataJSON['audit_score_per_day'],
+                backgroundColor:'rgb(63, 127, 191, 0.0)',
+                borderColor:'rgb(63, 127, 191, 1)',
+                borderWidth: 1, 
+                type: 'line',
+                lineTension: 0
                 }]
             };
     barChartOptions = {
@@ -217,12 +243,25 @@
                 },
                 scales: {
                 yAxes: [{
+                    id: 'number_of_audits',
+                    position: 'left',
                     ticks: {
                         beginAtZero: true
                     },
                     scaleLabel: {
                         display: true,
                         labelString: 'Number of Inspections'
+                    }
+                }, 
+                {
+                    id: 'average_score',
+                    position: 'right',
+                    ticks: {
+                        beginAtZero: true
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Average Audit Score'
                     }
                 }],
                 xAxes: [{

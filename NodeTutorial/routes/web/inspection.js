@@ -47,9 +47,7 @@ router.get("/:agent_name", function(req,res){ // :postID represents a variable p
             var previous_day = new Date();
             previous_day.setTime(now.getTime() - 1000*60*60*24*i); // milliseconds since 1970
             day_labels.push(previous_day.toISOString().slice(5,10));
-            //console.log(day_labels);
 
-            //.toISOString().slice(0,10);
         }
         // get GPS data for each audit
         var audit_GPS_data = [];
@@ -61,7 +59,6 @@ router.get("/:agent_name", function(req,res){ // :postID represents a variable p
         }
         
         agent_data['GPS_data'] = audit_GPS_data;
-        //console.log('audit_GPS_data', JSON.stringify(agent_data['GPS_data']));
         agent_data['day_labels'] = day_labels;
         agent_data['number_of_audits_per_day'] = agent.time_series[1];
         agent_data['audit_score_per_day'] = agent.time_series[0];
