@@ -45,7 +45,6 @@ def db_connect():
     print("Connecting to Database...", file=LOG, end='')
     db_client = pymongo.MongoClient(DATABASE_URL)
     db_name = db_client['RealEstateData']
-    db_retrieve_col = db_name['inspections']  # inspections collection, staging db
     db_audits_col = db_name['audits']  # audits collection
     db_agents_col = db_name['agents']  # agents collection
     # TODO change back from temp
