@@ -31,10 +31,9 @@
 </div>
 </div> <!-- ends the row div, place columns above this-->
 <script>
-    <% var agent_dataJSON =JSON.parse(agent_data)%>; // convert JSON stringify back into an object
-    var hopethisworks = JSON.parse(<%-"'"+agent_data+"'"%>)
-    document.getElementById("number_of_inspections_label").innerHTML ="# Inspections: " + hopethisworks['number_of_inspections'];
-    document.getElementById("average_score_label").innerHTML = "Average Score: " + hopethisworks['avg_score'];
+    var agent_dataJSON = JSON.parse(<%-"'"+agent_data+"'"%>)
+    document.getElementById("number_of_inspections_label").innerHTML ="# Inspections: " + agent_dataJSON['number_of_inspections'];
+    document.getElementById("average_score_label").innerHTML = "Average Score: " + agent_dataJSON['avg_score'];
 
 </script>
 <!-- Google maps plotting-->
@@ -61,11 +60,11 @@
     });
     var count = 0;
 
-    <% agent_dataJSON['GPS_data'].forEach(function(street_location) { %>
+    agent_dataJSON['GPS_data'].forEach(function(street_location) { 
         count = count +1;
-        var audit_index = <%-agent_dataJSON['GPS_data'].indexOf(street_location)%>;
-        var address = <%- "'" +  street_location[2] + "'" %>;
-        var coordinates = {lat:<%- street_location[1] %>,lng: <%- street_location[0] %>}
+        var audit_index = agent_dataJSON['GPS_data'].indexOf(street_location);
+        var address = street_location[2];
+        var coordinates = {lat:parseFloat(street_location[1], 10),lng:parseFloat(street_location[0], 10) }
         var marker = new google.maps.Marker({
             position: coordinates,
             map: map,
@@ -82,7 +81,7 @@
                 infowindow.open(map, marker);
             }
         })(marker, audit_index, infowindow));
-    <% }) %>
+    })
     }
     
 </script>
@@ -108,7 +107,7 @@
     current_date.setFullYear(2020);
     var min_date = new Date();
     // calculate the minimum date based on the length of the time series data
-    min_date.setTime(current_date.getTime() - 1000*60*60*24* <%= agent_dataJSON['number_of_audits_per_day'].length %>);
+    min_date.setTime(current_date.getTime() - 1000*60*60*24* agent_dataJSON['number_of_audits_per_day'].length);
     // change text string in HMTL div
     document.getElementById('daterange').innerHTML = 'test';
     $(function() {
@@ -123,15 +122,18 @@
             end_date = end.format('YYYY-MM-DD');
             var start_index = datediff(min_date, start._d);
             var end_index = datediff(min_date, end._d)
-            var new_stuff = [<%- "'"+ agent_dataJSON['day_labels'].join("','") + "'" %>]
+            var new_stuff = ["'"+ agent_dataJSON['day_labels'].join("','") + "'"]
             updateChart(start_index, end_index, agentChart);
             updateMap(start_index, end_index);
             //update map
         });
     });
     function updateChart(start, end, chart){
-        var new_labels = [<%- "'"+ agent_dataJSON['day_labels'].join("','") + "'" %>].slice(start, end);
-        var new_data = [<%- "'"+ agent_dataJSON['number_of_audits_per_day'].join("','") + "'" %>].slice(start, end);
+        console.log(agent_dataJSON['day_labels'].slice(start, end))
+        console.log(agent_dataJSON['number_of_audits_per_day'].slice(start, end))
+        // there are some date missmatches in this, but that will be fixed with proper data
+        var new_labels = agent_dataJSON['day_labels'].slice(start, end);
+        var new_data = agent_dataJSON['number_of_audits_per_day'].slice(start, end);
         chart.data.labels = new_labels;
         chart.data.datasets.data = new_data;
         chart.update();
@@ -142,17 +144,17 @@
         // GPS data is sorted by date
         // sum the time series up until start
         var start_count = 0;
-        var before_selected = [<%- "'"+ agent_dataJSON['number_of_audits_per_day'].join("','") + "'" %>].slice(0, start)
+        var before_selected = ["'"+ agent_dataJSON['number_of_audits_per_day'].join("','") + "'"].slice(0, start)
         for (var i = 0; i < before_selected.length; i++ ){
             start_count += parseInt(before_selected[i], 10);
         }
         // sum the time series up until end
         var end_count = 1; // end starts at one to avoid edge case
-        var after_selected = [<%- "'"+ agent_dataJSON['number_of_audits_per_day'].join("','") + "'" %>].slice(0, end)
+        var after_selected = ["'"+ agent_dataJSON['number_of_audits_per_day'].join("','") + "'"].slice(0, end)
         for (var i = 0; i < after_selected.length; i++ ){
             end_count += parseInt(after_selected[i], 10);
         }
-        var full_GPS = <%-"'"+agent_dataJSON['GPS_data']+"'"%>
+        var full_GPS = "'"+agent_dataJSON['GPS_data']+"'"
         initMap()
     }
 </script>
@@ -167,10 +169,10 @@
     Chart.defaults.global.hover.mode = 'nearest';
     var timeFormat = 'DD/MM/YYYY';
     barChartData = {
-                labels: [<%- "'"+ agent_dataJSON['day_labels'].join("','") + "'" %>],
+                labels: agent_dataJSON['day_labels'],
                 datasets: [{
-                label: <%- "'"+ '# of Inspections by ' + agent_dataJSON['agent_name'] + "'"%> ,
-                data: [<%=agent_dataJSON['number_of_audits_per_day'] %>],
+                label: '# of Inspections by ' + agent_dataJSON['agent_name'] ,
+                data: agent_dataJSON['number_of_audits_per_day'],
                 backgroundColor:'rgba(255, 99, 132, 0.2)',
                 borderColor:'rgba(255, 99, 132, 1)',
                 borderWidth: 1
@@ -180,7 +182,7 @@
                 aspectRatio: 1.5,
                 title:{
                     display:true,
-                    text:<%- "'"+ '2020 Inspections by ' + agent_dataJSON['agent_name'] + "'"%>,
+                    text:'2020 Inspections by ' + agent_dataJSON['agent_name']%>,
                     fontSize: 20,
                     fontColor: '#000'
                 },
