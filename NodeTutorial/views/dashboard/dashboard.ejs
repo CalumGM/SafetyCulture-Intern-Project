@@ -1,17 +1,7 @@
 <head>
     <style type="text/css">
-        /* Always set the map height explicitly to define the size of the div
-         * element that contains the map. */
         #map {
           height: 100%;
-        }
-    
-        /* Optional: Makes the sample page fill the window. */
-        html,
-        body {
-          height: 250px;
-          margin: 0;
-          padding: 0;
         }
     </style>
     <script src ="https://polyfill.io/v3/polyfill.min.js?features=default" ></script>
@@ -19,41 +9,48 @@
 </head>
 <%- include('../_partial/_header'); -%>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-12">
         <h1>Data overview</h1>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6" style="margin-bottom:10px;">
+    <div class="col-10" style="margin-bottom:10px;">
         <!-- <a href="/posts/add" type="button" class="btn btn-default">New Post</a> -->
         <!-- <a href="/posts/view" type="button" class="btn btn-default">View Audits</a> -->
     </div>
+    <div class="col-2">
+        <input type="text" name="daterange" id="daterange"/>
+    </div>
 </div>
-<div class="col-sm-12 col-md-12">
-    <div class="col-sm-12 col-md-6">
+<div class="row">
+    <div class="col-6">
         <div class="agent_performance">
             <canvas id="agent_performance_chart"></canvas>
         </div>
     </div>
-    <div class="col-sm-12 col-md-6">
+    <div class="col-6">
         <div class="team_performance">
             <canvas id="team_performance_chart"></canvas>
         </div>
     </div>
-    <div class="col-sm-12 col-md-6">
+</div>
+<div class="row">
+    <div class="col-6">
         <div class="agent_alignment">
             <canvas id="agent_alignment_chart"></canvas>
         </div>
     </div>
-    <div class="col-sm-12 col-md-6">
+    <div class="col-6">
         <div class="team_hotspots">
             <div id="map"></div>
             </p>
         </div>
     </div>
-
 </div>
+<script> // declare the full dataset
+    var dashboard_data =  JSON.parse(<%-"'"+dashboard_data+"'"%>)
+</script>
 <script>
     let map;
 
@@ -63,14 +60,15 @@
             zoom: 13,
             mapTypeId: "terrain",
         });
-        draw_heatmap([<%- audit_location_data.join()%>]);
+        console.log(dashboard_data['audit_location_data'])
+        draw_heatmap(dashboard_data['audit_location_data']);
     }
 
     const draw_heatmap = function(results) {
         heatmapData = [];
         for (let i = 0; i < results.length; i++) {
             const coords = results[i];
-            const latLng = new google.maps.LatLng(coords[0], coords[1]);
+            const latLng = new google.maps.LatLng(parseFloat(coords[0]), parseFloat(coords[1]));
             heatmapData.push(latLng);
         }
         const heatmap = new google.maps.visualization.HeatmapLayer({
@@ -92,10 +90,10 @@
     Chart.defaults.global.hover.mode = 'nearest';
 
     agentPerformanceChartData = {
-                labels: [<%- "'"+ agent_names.join("','") + "'" %>],
+                labels: dashboard_data['agent_names'],
                 datasets: [{
                     label: '# of Inspections Completed',
-                    data: [<%=agent_totals %>],
+                    data: dashboard_data['agent_totals'],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -144,10 +142,10 @@
             };
 
     alignmentChartData = {
-                labels: [<%- "'"+ agent_names.join("','") + "'" %>],
+                labels: dashboard_data['agent_names'],
                 datasets: [{
                     label: 'Relative Property Score',
-                    data: [<%=agent_rel_scores %>],
+                    data: dashboard_data['agent_rel_scores'],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -195,10 +193,10 @@
                 }
             };
     lineChartData = {
-                labels: [<%- "'"+ day_labels.join("','") + "'" %>],
+                labels: dashboard_data['day_labels'],
                 datasets: [{
                     label: 'Relative Property Score',
-                    data: [<%=daily_audit_count %>],
+                    data: dashboard_data['daily_audit_count'],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -261,4 +259,41 @@
         options:alignmentChartOptions
     });
 </script>
+
+<script> // script for date range
+    
+    var start_date, end_date;
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+    var dateObj = new Date();
+    var month = dateObj.getMonth()+1;
+    var day = String(dateObj.getDate()).padStart(2, '0');
+    var year = dateObj.getFullYear();
+    var current_date = new Date(year + '-' + month + '-' + day);
+    var min_date = new Date();
+    // Arbitarily 180 days backwards
+    min_date.setTime(current_date.getTime() - 1000*60*60*24* 180)
+    // change text string in HMTL div
+    document.getElementById('daterange').innerHTML = 'test';
+    $(function() {
+        $('input[name="daterange"]').daterangepicker({
+            dateFormat: "yy-mm-dd",
+            minDate: new Date(min_date),
+            maxDate: new Date(current_date),
+            opens: 'left'
+            }, function(start, end, label) {
+            // start and end are the two dates selected on the GUI
+            start_date = start.format('YYYY-MM-DD'); // moment object
+            end_date = end.format('YYYY-MM-DD');
+            console.log('Dates:',start_date,end_date)
+            //update map
+            //console.log(dashboard_data['audit_location_data'])
+            //draw_heatmap(dashboard_data['audit_location_data'])
+            window.location = "/dashboard/"+start_date+"/"+end_date;
+            
+        });
+    });
+
+</script>
+
 <%- include ('../_partial/_footer'); -%>
