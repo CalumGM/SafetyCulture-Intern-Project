@@ -1,6 +1,6 @@
 var express = require("express");
 var passport = require("passport");
-//var ensureAuthenticated = require("../../auth/auth").ensureAuthenticated;
+var ensureAuthenticated = require("../../auth/auth").ensureAuthenticated;
 
 var Audit = require("../../models/audits");
 var Agent = require("../../models/agents");
