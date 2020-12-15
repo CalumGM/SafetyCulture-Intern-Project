@@ -19,7 +19,7 @@ router.get("/", function(req, res){ // implicit /post before each of these route
 
 router.get("/:agent_name", function(req,res){ // :postID represents a variable parameter as a route
     // find all audits done by a particular agent and sort by date accending
-    Audit.find({agent_name:req.params.agent_name}).sort({date: 1}).exec(function(err, audits){ 
+    Audit.find({agent_name:req.params.agent_name}).sort({date: 0}).exec(function(err, audits){ 
         if(err){console.log(err);}
         // do all calcs in here. Yes, because backend does all the heavy lifting
         var agent_data = {};
