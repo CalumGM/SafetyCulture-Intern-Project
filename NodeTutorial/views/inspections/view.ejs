@@ -102,11 +102,11 @@
     var day = String(dateObj.getDate()).padStart(2, '0');
     var year = dateObj.getFullYear();
     
-    //var current_date = new Date(year + '-' + month + '-' + day);
-    var current_date = new Date();
-    current_date.setMonth(11);
-    current_date.setDate(9);
-    current_date.setFullYear(2020);
+    var current_date = new Date(year + '-' + month + '-' + day);
+    // var current_date = new Date();
+    // current_date.setMonth(11);
+    // current_date.setDate(9);
+    // current_date.setFullYear(2020);
     var min_date = new Date();
     // calculate the minimum date based on the length of the time series data
     min_date.setTime(current_date.getTime() - 1000*60*60*24* agent_dataJSON['number_of_audits_per_day'].length);
@@ -130,14 +130,26 @@
             //update map
         });
     });
+    var number_of_inspections_shown;
+    var average_score_of_inpsections_shown;
     function updateChart(start, end, chart){
         //console.log(agent_dataJSON['day_labels'].slice(start, end))
         //console.log(agent_dataJSON['number_of_audits_per_day'].slice(start, end))
         // there are some date missmatches in this, but that will be fixed with proper data
+
+        number_of_inspections_shown = agent_dataJSON['number_of_audits_per_day'].slice(start, end).reduce((a, b) => a + b, 0);
+        average_score_of_inpsections_shown = (agent_dataJSON['audit_score_per_day'].slice(start, end).reduce((a, b) => a + b, 0))/number_of_inspections_shown;
+        document.getElementById("number_of_inspections_label").innerHTML ="# Inspections: " + number_of_inspections_shown;
+        document.getElementById("average_score_label").innerHTML = "Average Score: " + average_score_of_inpsections_shown;
+
+
+
+
         var new_labels = agent_dataJSON['day_labels'].slice(start, end);
         var new_data = agent_dataJSON['number_of_audits_per_day'].slice(start, end);
         chart.data.labels = new_labels;
-        chart.data.datasets.data = new_data;
+        chart.data.datasets[0].data = new_data;
+        // add another axis here for average score for that day
         chart.update();
     }
     function updateMap(start, end){
@@ -150,18 +162,16 @@
         for (var i = 0; i < before_selected.length; i++ ){
             start_count += parseInt(before_selected[i], 10);
         }
-        console.log('before', before_selected)
+        //console.log('before', before_selected)
 
         // sum the time series up until end
-        var end_count = 1; // end starts at one to avoid edge case
+        var end_count = 0; // end starts at one to avoid edge case
         var after_selected = agent_dataJSON['number_of_audits_per_day'].slice(0, end)
         for (var i = 0; i < after_selected.length; i++ ){
             end_count += parseInt(after_selected[i], 10);
         }
-        console.log('after', after_selected)
-        console.log('big GPS', agent_dataJSON['GPS_data'])
+        //console.log('after', after_selected)
         GPS_data = agent_dataJSON['GPS_data'].slice(start_count, end_count)
-        console.log('new GPS', GPS_data)
         initMap()
     }
 </script>
