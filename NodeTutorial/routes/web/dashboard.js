@@ -21,7 +21,7 @@ async function prepare_page_data(req, res, date_start, date_end) {
         date_end = new Date(Date.now())
     }
 
-    AuditModel.find({"date":{ $gte:date_start, $lt:date_end}}).exec(function(err, audits) { // find in database
+    AuditModel.find({"date":{ $gte:date_start, $lt:date_end}}).sort({date: 0}).exec(function(err, audits) { // find in database
         if(err){console.log(err);}
 
         var agent_name_to_inspection_count = {}
