@@ -1,0 +1,25 @@
+<%- include('../_partial/_header'); -%>
+
+<% if(currentUser != null) { %>
+    <h1><%= currentUser.username %>'s Home Page</h1>
+<%}%>
+<% if(currentUser == null) { %> 
+    <h1>Welcome to the Home Page</h1>
+    <h6>Log in or Sign up to continue</h6>
+<% } %>
+<div class="container-fluid">
+    <div class="row"> <!--bootstrap grid layout-->
+      <div class="col-md-6 bg-success">
+        <canvas id="topCanvas"></canvas>
+      </div>
+      <div class="col-md-6 bg-warning">
+        <canvas id="bottomCanvas"></canvas>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Talk about a screen design to display some data</h3>
+        </div>
+    </div>
+  </div>
+<%- include ('../_partial/_footer'); -%>

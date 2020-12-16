@@ -13,8 +13,20 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-
-
+    <style>footer.footer {
+               position: absolute;
+               bottom: 0px;
+               width: 100%;
+           }
+           svg.bi.bi-calendar-fill {
+               pointer-events: none;
+               position: absolute;
+               margin: 2px;
+           }
+           input#daterange {
+               border: none;
+           }
+    </style>
 </head>
  
 <body>
@@ -40,7 +52,7 @@
                 </li> 
             <% if(currentUser != null) { %>
                 <li class="nav-item">
-                    <a class="nav-link" href="/inspections">Inspections</a>
+                    <a class="nav-link" href="/agents">Agents</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
