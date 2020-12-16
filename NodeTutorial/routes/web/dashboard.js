@@ -34,7 +34,7 @@ async function prepare_page_data(req, res, date_start, date_end) {
         var audit_location_data = []
 
         audits.forEach(audit => {
-            audit_location_data.push([audit.location.lat,audit.location.long]);
+            audit_location_data.push([audit.location.lat,audit.location.long, 1-(audit.scores.score_percentage/100)]);
             // Create Agent_Dictionaries
             // Create Agent Name List
             if (audit.agent_name in agent_name_to_inspection_count) {

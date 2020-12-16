@@ -1,0 +1,11 @@
+<%- include('../_partial/_header'); -%>
+
+<% if(currentUser != null) { %>
+    <h1><%= currentUser.username %>'s Home Page</h1>
+<%}%>
+<% if(currentUser == null) { %>
+    <h1>Welcome to the Home Page</h1>
+    <h6>Log in or Sign up to continue</h6>
+<% } %>
+
+<%- include ('../_partial/_footer'); -%>

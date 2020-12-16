@@ -16,8 +16,9 @@ router.use(function(req,res, next){
 
 
 router.use("/", require("./home"));
-router.use("/inspections", require("./inspection"));
+router.use("/agents", require("./agent"));
 router.use("/dashboard", require("./dashboard"));
+router.use("/profile", require("./profile"));
 
 
 module.exports = router;

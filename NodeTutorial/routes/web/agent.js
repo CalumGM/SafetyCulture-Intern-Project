@@ -13,7 +13,7 @@ router.get("/", function(req, res){ // implicit /post before each of these route
     Agent.find({}).exec(function(err, agents){ // find all agents in database
         if(err){console.log(err);}
         found_agents = agents;
-        res.render("inspections/inspections", {agents:agents}); // passing on the posts that were found matching the userID
+        res.render("agents/agents", {agents:agents}); // passing on the posts that were found matching the userID
     });
  });
 
@@ -62,7 +62,7 @@ router.get("/:agent_name", function(req,res){ // :postID represents a variable p
         agent_data['day_labels'] = day_labels;
         agent_data['number_of_audits_per_day'] = agent.time_series[1];
         agent_data['audit_score_per_day'] = agent.time_series[0];
-        res.render("inspections/view",{audits:audits, agent_data:JSON.stringify(agent_data), agents:found_agents});
+        res.render("agents/view",{audits:audits, agent_data:JSON.stringify(agent_data), agents:found_agents});
     });
 });
 

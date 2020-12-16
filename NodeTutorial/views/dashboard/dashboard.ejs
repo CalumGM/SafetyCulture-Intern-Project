@@ -16,8 +16,6 @@
 
 <div class="row">
     <div class="col-10" style="margin-bottom:10px;">
-        <!-- <a href="/posts/add" type="button" class="btn btn-default">New Post</a> -->
-        <!-- <a href="/posts/view" type="button" class="btn btn-default">View Audits</a> -->
     </div>
     <div class="col-2">
         <input type="text" name="daterange" id="daterange"/>
@@ -49,7 +47,7 @@
     </div>
 </div>
 <script> // declare the full dataset
-    var dashboard_data =  JSON.parse(<%-"'"+dashboard_data+"'"%>)
+    var dashboard_data =  JSON.parse(<%-"'"+dashboard_data+"'" %>)
 </script>
 <script>
     let map;
@@ -68,13 +66,14 @@
         heatmapData = [];
         for (let i = 0; i < results.length; i++) {
             const coords = results[i];
-            const latLng = new google.maps.LatLng(parseFloat(coords[0]), parseFloat(coords[1]));
-            heatmapData.push(latLng);
+            const point = {location: new google.maps.LatLng(parseFloat(coords[0]), parseFloat(coords[1])), weight: parseFloat(coords[2])};
+            
+            heatmapData.push(point);
         }
         const heatmap = new google.maps.visualization.HeatmapLayer({
             data: heatmapData,
             dissipating: true,
-            map: map,
+            map: map
         });
     };
 </script>
