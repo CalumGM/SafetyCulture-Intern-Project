@@ -223,9 +223,14 @@
                 {
                 label: 'Average Inspcetion Score' ,
                 yAxisID: 'average_score',
+                pointRadius: 5,
+                pointStyle: 'rectRot',
+                pointBackgroundColor: 'rgb(63, 127, 191, 0.5)',
                 data: agent_dataJSON['audit_score_per_day'],
                 backgroundColor:'rgb(63, 127, 191, 0.0)',
-                borderColor:'rgb(63, 127, 191, 1)',
+                borderColor:'rgb(63, 127, 191, 0)',
+                pointBorderColor:'rgb(63, 127, 191, 1)',
+
                 borderWidth: 1, 
                 type: 'line',
                 lineTension: 0
@@ -254,8 +259,12 @@
                 scales: {
                 yAxes: [{
                     id: 'number_of_audits',
+                    gridLines: {
+                        display:false
+                    },   
                     position: 'left',
                     ticks: {
+                        suggestedMax: 8,
                         beginAtZero: true
                     },
                     scaleLabel: {
@@ -265,8 +274,12 @@
                 }, 
                 {
                     id: 'average_score',
+                    gridLines: {
+                        display:true
+                    },  
                     position: 'right',
                     ticks: {
+                        max: 100,
                         beginAtZero: true
                     },
                     scaleLabel: {
@@ -275,6 +288,9 @@
                     }
                 }],
                 xAxes: [{
+                    gridLines: {
+                        display:false
+                    },
                     ticks: {
                         beginAtZero: true
                     },
