@@ -42,7 +42,10 @@
 </div>
 </div> <!-- ends the row div, place columns above this-->
 <script>
+    // convert JSON stringify back into an object
     var agent_dataJSON = JSON.parse(<%-"'"+agent_data+"'"%>)
+
+    // update HTML labels
     document.getElementById("number_of_inspections_label").innerHTML ="# Inspections: " + agent_dataJSON['number_of_inspections'];
     document.getElementById("average_score_label").innerHTML = "Average Score: " + agent_dataJSON['avg_score'];
     document.getElementById("page_title_label").innerHTML = "Performance Review of " + agent_dataJSON['agent_name']
@@ -54,7 +57,7 @@
     /* Set the size of the div element that contains the map */
     #map {
     height: 300px;
-    /* The height is 400 pixels */
+    /* The height is 300 pixels */
     width: 100%;
     /* The width is the width of the web page */
     }
@@ -62,6 +65,7 @@
 <script> // map script
     // mutable array of GPS data
     var GPS_data = agent_dataJSON['GPS_data'];
+
     // Initialize and add the map
     function initMap() {
     // The location of Townsville
@@ -72,23 +76,25 @@
         center: townsville,
         disableDefaultUI: true,
     });
-    var count = 0;
 
+    // iterate through each location object
     GPS_data.forEach(function(street_location) { 
-        count = count +1;
         var audit_index = GPS_data.indexOf(street_location);
         var address = street_location[2];
+        // coordinates in google maps format
         var coordinates = {lat:parseFloat(street_location[1], 10),lng:parseFloat(street_location[0], 10) }
+        // red marker on map for each property
         var marker = new google.maps.Marker({
             position: coordinates,
             map: map,
     
         });
+        // pop-up containing the address
         var infowindow = new google.maps.InfoWindow({
             content: address,
         });
-        //infowindow.open(map, marker);
 
+        // on-click callback
         google.maps.event.addListener(marker, 'click', (function(marker, audit_index, infowindow) {
             return function() {
                 infowindow.setContent(address);
