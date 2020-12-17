@@ -17,7 +17,8 @@ async function prepare_page_data(req, res, date_start, date_end) {
         date_start = new Date(date_start);
         date_end = new Date(date_end);
     } else {
-        date_start = new Date('2020-01-01');
+        date_start
+        date_start = new Date('2020-11-18');
         date_end = new Date(Date.now())
     }
 
